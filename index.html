@@ -8,6 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
     <style>
         * {
             margin: 0;
@@ -120,6 +121,10 @@
             background: linear-gradient(135deg, #ef5350, #e53935);
         }
 
+        .btn-warning {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+        }
+
         .link-btn {
             background: none;
             color: #00bcd4;
@@ -144,6 +149,18 @@
             margin-bottom: 20px;
             color: #00695c;
             font-size: 14px;
+        }
+
+        .alert-danger {
+            background: #ffebee;
+            border-color: #ef5350;
+            color: #c62828;
+        }
+
+        .alert-warning {
+            background: #fff3e0;
+            border-color: #ff9800;
+            color: #e65100;
         }
 
         /* Main App */
@@ -208,10 +225,68 @@
             color: #00695c;
         }
 
+        .admin-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 10px;
+            font-weight: 700;
+            margin-left: 5px;
+        }
+
         .btn-small {
             padding: 10px 20px;
             font-size: 14px;
             width: auto;
+        }
+
+        /* Deadline Warning Banner */
+        .deadline-banner {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        .deadline-banner.critical {
+            background: linear-gradient(135deg, #ef5350, #e53935);
+            color: white;
+        }
+
+        .deadline-banner.warning {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            color: white;
+        }
+
+        .deadline-banner.info {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+            color: white;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Account Locked Screen */
+        .locked-screen {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(239, 83, 80, 0.3);
+            border: 3px solid #ef5350;
+        }
+
+        .locked-icon {
+            font-size: 100px;
+            margin-bottom: 20px;
         }
 
         /* Breadcrumb */
@@ -465,21 +540,19 @@
 
         .quick-links-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
         }
 
         .quick-link {
             display: block;
-            padding: 15px;
+            padding: 20px 15px;
             background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
             border: 2px solid #80deea;
             border-radius: 10px;
             text-align: center;
             text-decoration: none;
             color: #00695c;
-            font-weight: 600;
-            font-size: 13px;
             transition: all 0.3s;
         }
 
@@ -490,14 +563,81 @@
             transform: translateY(-2px);
         }
 
-        .firebase-notice {
-            background: #fff3cd;
-            border: 2px solid #ffc107;
-            color: #856404;
-            padding: 15px;
-            border-radius: 10px;
+        .quick-link-title {
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .quick-link-desc {
+            font-size: 11px;
+            opacity: 0.8;
+            display: block;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border: 2px solid #ff9800;
+            padding: 20px;
+            border-radius: 15px;
             margin-bottom: 20px;
-            font-size: 13px;
+        }
+
+        .admin-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0f7fa;
+        }
+
+        .modal-close {
+            background: #ef5350;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
         }
 
         @media (max-width: 768px) {
@@ -576,7 +716,7 @@
                     </div>
                     <div class="form-group">
                         <label>🔒 Password</label>
-                        <input type="password" id="regPassword" required placeholder="Create a password">
+                        <input type="password" id="regPassword" required placeholder="Create a password (min 6 characters)">
                     </div>
                     <div class="form-group">
                         <label>🔒 Confirm Password</label>
@@ -588,11 +728,35 @@
             </div>
         </div>
 
+        <!-- Account Locked Screen -->
+        <div id="lockedScreen" class="hidden">
+            <div class="locked-screen">
+                <div class="locked-icon">🔒</div>
+                <h2 style="color: #ef5350; margin-bottom: 15px;">Account Suspended</h2>
+                <p style="color: #666; margin-bottom: 20px;">
+                    Your account has been locked due to missing monthly financial statement submission.
+                    <br><br>
+                    <strong>Please contact an administrator to unlock your account.</strong>
+                </p>
+                <button onclick="logout()" class="btn btn-danger">Return to Login</button>
+            </div>
+        </div>
+
         <!-- Main Application -->
         <div id="mainApp" class="hidden">
-            <!-- Firebase Notice -->
-            <div class="firebase-notice">
-                ⚙️ <strong>Firebase Connected:</strong> Real-time authentication enabled with secure data management and 4-hour edit window rules.
+            <!-- Deadline Warning Banner -->
+            <div id="deadlineBanner" class="hidden"></div>
+
+            <!-- Admin Panel -->
+            <div id="adminPanel" class="hidden admin-panel">
+                <h3 style="color: #e65100; margin-bottom: 10px;">🛡️ Administrator Panel</h3>
+                <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Manage users, view all records, and system settings</p>
+                <div class="admin-actions">
+                    <button onclick="viewAllUsers()" class="btn btn-warning btn-small">👥 View All Users</button>
+                    <button onclick="unlockUserAccount()" class="btn btn-warning btn-small">🔓 Unlock Account</button>
+                    <button onclick="viewAllSubmissions()" class="btn btn-warning btn-small">📊 View Submissions</button>
+                    <button onclick="sendBulkReminders()" class="btn btn-warning btn-small">📧 Send Reminders</button>
+                </div>
             </div>
 
             <!-- Header -->
@@ -607,7 +771,8 @@
                     </div>
                     <div class="header-right">
                         <div class="user-info">
-                            Welcome, <strong id="userName">User</strong><br>
+                            Welcome, <strong id="userName">User</strong>
+                            <span id="adminBadge" class="hidden admin-badge">ADMIN</span><br>
                             <small id="userCurrency">Currency: KSh</small>
                         </div>
                         <button onclick="logout()" class="btn btn-danger btn-small">🚪 Logout</button>
@@ -644,7 +809,7 @@
                     <div class="card" onclick="selectDiv('VALENTA')">
                         <div class="card-icon">🏢</div>
                         <div class="card-title">VALENTA</div>
-                        <div class="card-subtitle">2 containers</div>
+                        <div class="card-subtitle">3 containers</div>
                     </div>
                 </div>
             </div>
@@ -669,21 +834,40 @@
                             <h2 id="accountTitle"></h2>
                             <p id="accountSubtitle"></p>
                         </div>
-                        <button onclick="toggleEntryForm()" class="btn btn-secondary btn-small">➕ Add Entry</button>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="toggleEntryForm()" class="btn btn-secondary btn-small">➕ Add Entry</button>
+                            <button onclick="emailMonthlyStatement()" class="btn btn-warning btn-small">📧 Email Statement</button>
+                        </div>
                     </div>
 
                     <!-- Entry Form -->
                     <div id="entryForm" class="entry-form hidden">
-                        <h3>New Financial Entry</h3>
-                        <form onsubmit="addEntry(event)">
+                        <h3 id="formTitle">New Financial Entry</h3>
+                        <form onsubmit="addEntry(event)" id="transactionForm">
                             <div class="form-row">
                                 <div class="form-group">
                                     <label>📅 Date</label>
                                     <input type="date" id="entryDate" required>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" id="codeGroup">
                                     <label>#️⃣ Transaction Code</label>
                                     <input type="text" id="entryCode" required placeholder="TXN-12345">
+                                </div>
+                                <div class="form-group" id="categoryGroup" class="hidden">
+                                    <label>📂 Category</label>
+                                    <select id="entryCategory">
+                                        <option value="Salary">Salary</option>
+                                        <option value="Business">Business Income</option>
+                                        <option value="Investment">Investment</option>
+                                        <option value="Food">Food & Groceries</option>
+                                        <option value="Transport">Transport</option>
+                                        <option value="Utilities">Utilities</option>
+                                        <option value="Rent">Rent/Housing</option>
+                                        <option value="Healthcare">Healthcare</option>
+                                        <option value="Entertainment">Entertainment</option>
+                                        <option value="Education">Education</option>
+                                        <option value="Other">Other</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -693,11 +877,19 @@
                                 </div>
                             </div>
                             <div class="form-row">
-                                <div class="form-group">
+                                <div class="form-group" id="incomeGroup" class="hidden">
+                                    <label>💰 Income (<span id="currencySymbolIncome">KSh</span>)</label>
+                                    <input type="number" step="0.01" id="entryIncome" placeholder="0.00">
+                                </div>
+                                <div class="form-group" id="expenseGroup" class="hidden">
+                                    <label>💸 Expense (<span id="currencySymbolExpense">KSh</span>)</label>
+                                    <input type="number" step="0.01" id="entryExpense" placeholder="0.00">
+                                </div>
+                                <div class="form-group" id="amountGroup">
                                     <label>💵 Amount (<span id="currencySymbol">KSh</span>)</label>
                                     <input type="number" step="0.01" id="entryAmount" required placeholder="0.00">
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" id="typeGroup">
                                     <label>📊 Type</label>
                                     <select id="entryType" required>
                                         <option value="credit">Credit (+)</option>
@@ -724,10 +916,54 @@
             <div class="quick-links">
                 <h3>🔗 Quick Links to Other Apps</h3>
                 <div class="quick-links-grid">
-                    <a href="https://magero1985.github.io/oloo_app/" target="_blank" class="quick-link">Oloo App</a>
-                    <a href="https://kabiru-mining-portal.vercel.app/" target="_blank" class="quick-link">Kabiru Mining</a>
-                    <a href="https://tau-africa.vercel.app/" target="_blank" class="quick-link">Tau Africa Portal</a>
+                    <a href="https://tau-africa.vercel.app/" target="_blank" class="quick-link">
+                        <span class="quick-link-title">Tau Africa Intl App</span>
+                        <span class="quick-link-desc">Main Platform, for other Utility Applications</span>
+                    </a>
+                    <a href="https://magero1985.github.io/oloo_app/" target="_blank" class="quick-link">
+                        <span class="quick-link-title">Oloo App</span>
+                        <span class="quick-link-desc">Messenger app - chat, call, meet</span>
+                    </a>
+                    <a href="https://kabiru-mining-portal.vercel.app/" target="_blank" class="quick-link">
+                        <span class="quick-link-title">Kabiru Mining App</span>
+                        <span class="quick-link-desc">Mine kabiru by validating values</span>
+                    </a>
                 </div>
+            </div>
+        </div>
+
+        <!-- Email Statement Modal -->
+        <div id="emailModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 style="color: #00695c;">📧 Email Monthly Statement</h3>
+                    <button class="modal-close" onclick="closeEmailModal()">×</button>
+                </div>
+                <form onsubmit="sendEmailStatement(event)">
+                    <div class="form-group">
+                        <label>Organization Email</label>
+                        <input type="email" id="orgEmail" value="finance@tauafrica.org" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Month/Year</label>
+                        <input type="month" id="statementMonth" required>
+                    </div>
+                    <div class="alert">
+                        📌 <strong>Note:</strong> This will compile all transactions for the selected month and send them to the organization's financial department.
+                    </div>
+                    <button type="submit" class="btn">Send Statement</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Admin Modal -->
+        <div id="adminModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 style="color: #e65100;" id="adminModalTitle">Admin Panel</h3>
+                    <button class="modal-close" onclick="closeAdminModal()">×</button>
+                </div>
+                <div id="adminModalContent"></div>
             </div>
         </div>
     </div>
@@ -760,7 +996,7 @@
             'EU': { symbol: '€', name: 'Euro' }
         };
 
-        // Organization structure
+        // Organization structure with Income◇Expense Log
         const organization = {
             'TAU AFRICA': {
                 'PAR SIRAI': {
@@ -785,6 +1021,9 @@
                         { code: 'FA', name: 'Foundation Account' },
                         { code: 'HcA', name: 'Holding Co Account' },
                         { code: 'BA', name: 'Business Account' }
+                    ],
+                    'Income◇Expense Log': [
+                        { code: 'IEL', name: 'Personal Finance Tracker' }
                     ]
                 }
             }
@@ -797,9 +1036,152 @@
         let currentAccount = null;
         let financialRecords = {};
         let entryEditTimestamps = {};
+        let isIncomeExpenseLog = false;
 
         // Initialize
         document.getElementById('entryDate').valueAsDate = new Date();
+        const currentMonthInput = document.getElementById('statementMonth');
+        if (currentMonthInput) {
+            const now = new Date();
+            currentMonthInput.value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+        }
+
+        // Check and display deadline warnings
+        function checkMonthlyDeadline() {
+            if (!currentUser) return;
+
+            const now = new Date();
+            const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+            const daysUntilDeadline = Math.ceil((lastDayOfMonth - now) / (1000 * 60 * 60 * 24));
+
+            db.collection('submissions').doc(currentUser.uid).get()
+                .then((doc) => {
+                    const data = doc.data();
+                    const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+                    
+                    if (data && data.lastSubmission === currentMonth) {
+                        // Already submitted this month
+                        document.getElementById('deadlineBanner').classList.add('hidden');
+                        return;
+                    }
+
+                    const banner = document.getElementById('deadlineBanner');
+                    let message = '';
+                    let className = '';
+
+                    if (daysUntilDeadline <= 1) {
+                        className = 'critical';
+                        message = `🚨 URGENT: Monthly statement due in ${daysUntilDeadline} day(s)! Submit now to avoid account suspension.`;
+                    } else if (daysUntilDeadline <= 3) {
+                        className = 'warning';
+                        message = `⚠️ WARNING: Monthly statement due in ${daysUntilDeadline} days. Please submit soon.`;
+                    } else if (daysUntilDeadline <= 7) {
+                        className = 'warning';
+                        message = `⏰ REMINDER: Monthly statement due in ${daysUntilDeadline} days.`;
+                    } else if (daysUntilDeadline <= 14) {
+                        className = 'info';
+                        message = `📅 Monthly statement due in ${daysUntilDeadline} days.`;
+                    }
+
+                    if (message) {
+                        banner.className = `deadline-banner ${className}`;
+                        banner.innerHTML = message;
+                        banner.classList.remove('hidden');
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error checking deadline:", error);
+                });
+        }
+
+        // Check if account is locked
+        function checkAccountStatus() {
+            if (!currentUser) return Promise.resolve(false);
+
+            return db.collection('users').doc(currentUser.uid).get()
+                .then((doc) => {
+                    const data = doc.data();
+                    if (data && data.accountLocked) {
+                        document.getElementById('mainApp').classList.add('hidden');
+                        document.getElementById('lockedScreen').classList.remove('hidden');
+                        return true;
+                    }
+                    return false;
+                });
+        }
+
+        // Lock account if deadline passed without submission
+        function enforceMontlyDeadline() {
+            if (!currentUser) return;
+
+            const now = new Date();
+            const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+            
+            if (now.getDate() === 1) { // First day of new month
+                db.collection('submissions').doc(currentUser.uid).get()
+                    .then((doc) => {
+                        const data = doc.data();
+                        const lastMonth = `${now.getFullYear()}-${String(now.getMonth()).padStart(2, '0')}`;
+                        
+                        if (!data || data.lastSubmission !== lastMonth) {
+                            // Lock account
+                            return db.collection('users').doc(currentUser.uid).update({
+                                accountLocked: true,
+                                lockReason: 'Missing monthly statement submission',
+                                lockedAt: firebase.firestore.FieldValue.serverTimestamp()
+                            });
+                        }
+                    })
+                    .then(() => {
+                        checkAccountStatus();
+                    });
+            }
+        }
+
+        // Request notification permission
+        function requestNotificationPermission() {
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        console.log('Notification permission granted');
+                    }
+                });
+            }
+        }
+
+        // Send push notification
+        function sendPushNotification(title, body) {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification(title, {
+                    body: body,
+                    icon: '💰',
+                    badge: '💰'
+                });
+            }
+        }
+
+        // Schedule daily reminders
+        function scheduleDailyReminder() {
+            const now = new Date();
+            const reminderTime = new Date();
+            reminderTime.setHours(18, 0, 0, 0); // 6 PM daily
+
+            if (now > reminderTime) {
+                reminderTime.setDate(reminderTime.getDate() + 1);
+            }
+
+            const timeUntilReminder = reminderTime - now;
+
+            setTimeout(() => {
+                sendPushNotification(
+                    '📊 Tau Africa Reminder',
+                    'Don\'t forget to update your financial records today!'
+                );
+                
+                // Schedule for tomorrow
+                setTimeout(scheduleDailyReminder, 24 * 60 * 60 * 1000);
+            }, timeUntilReminder);
+        }
 
         // Authentication helper functions
         function showLogin() {
@@ -814,10 +1196,22 @@
 
         function showMainApp() {
             document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('lockedScreen').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
             document.getElementById('userName').textContent = currentUser.name;
             document.getElementById('userCurrency').textContent = 'Currency: ' + currentUser.currency.symbol;
             document.getElementById('currencySymbol').textContent = currentUser.currency.symbol;
+            document.getElementById('currencySymbolIncome').textContent = currentUser.currency.symbol;
+            document.getElementById('currencySymbolExpense').textContent = currentUser.currency.symbol;
+            
+            // Show admin panel if user is admin
+            if (currentUser.isAdmin) {
+                document.getElementById('adminPanel').classList.remove('hidden');
+                document.getElementById('adminBadge').classList.remove('hidden');
+            }
+
+            checkMonthlyDeadline();
+            enforceMontlyDeadline();
             navigateToOrgs();
         }
 
@@ -832,23 +1226,27 @@
                 return;
             }
 
+            if (password.length < 6) {
+                alert('❌ Password must be at least 6 characters long!');
+                return;
+            }
+
             const email = document.getElementById('regEmail').value;
             const name = document.getElementById('regName').value;
             const country = document.getElementById('regCountry').value;
 
-            // Create user with Firebase
             auth.createUserWithEmailAndPassword(email, password)
                 .then((userCredential) => {
-                    // Send verification email
                     return userCredential.user.sendEmailVerification().then(() => userCredential);
                 })
                 .then((userCredential) => {
-                    // Save user profile to Firestore
                     return db.collection('users').doc(userCredential.user.uid).set({
                         name: name,
                         email: email,
                         country: country,
                         currency: currencyMap[country],
+                        isAdmin: false,
+                        accountLocked: false,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
                 })
@@ -883,7 +1281,6 @@
         // MONITOR AUTHENTICATION STATE
         auth.onAuthStateChanged((user) => {
             if (user && user.emailVerified) {
-                // User is signed in and verified
                 db.collection('users').doc(user.uid).get()
                     .then((doc) => {
                         if (doc.exists) {
@@ -892,26 +1289,37 @@
                                 uid: user.uid,
                                 email: user.email,
                                 name: userData.name,
-                                currency: userData.currency || currencyMap['KE']
+                                currency: userData.currency || currencyMap['KE'],
+                                isAdmin: userData.isAdmin || false
                             };
                         } else {
                             currentUser = {
                                 uid: user.uid,
                                 email: user.email,
                                 name: user.email.split('@')[0],
-                                currency: currencyMap['KE']
+                                currency: currencyMap['KE'],
+                                isAdmin: false
                             };
                         }
-                        loadData();
-                        showMainApp();
+                        
+                        return checkAccountStatus();
+                    })
+                    .then((isLocked) => {
+                        if (!isLocked) {
+                            loadData();
+                            showMainApp();
+                            requestNotificationPermission();
+                            scheduleDailyReminder();
+                        }
                     })
                     .catch((error) => {
-                        console.error("Error loading user data:", error);
+                        console.error("Error:", error);
                         currentUser = {
                             uid: user.uid,
                             email: user.email,
                             name: user.email.split('@')[0],
-                            currency: currencyMap['KE']
+                            currency: currencyMap['KE'],
+                            isAdmin: false
                         };
                         loadData();
                         showMainApp();
@@ -923,6 +1331,7 @@
             } else {
                 document.getElementById('authScreen').classList.remove('hidden');
                 document.getElementById('mainApp').classList.add('hidden');
+                document.getElementById('lockedScreen').classList.add('hidden');
                 showLogin();
             }
         });
@@ -934,6 +1343,7 @@
                 currentDiv = null;
                 currentContainer = null;
                 currentAccount = null;
+                financialRecords = {};
                 alert('✅ Logged out successfully!');
             }).catch((error) => {
                 alert('❌ Logout error: ' + error.message);
@@ -1012,6 +1422,7 @@
             currentDiv = null;
             currentContainer = null;
             currentAccount = null;
+            isIncomeExpenseLog = false;
             
             document.getElementById('divsView').classList.remove('hidden');
             document.getElementById('containersView').classList.add('hidden');
@@ -1031,6 +1442,7 @@
         function navigateToContainers() {
             currentContainer = null;
             currentAccount = null;
+            isIncomeExpenseLog = false;
             
             document.getElementById('divsView').classList.add('hidden');
             document.getElementById('containersView').classList.remove('hidden');
@@ -1050,10 +1462,16 @@
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.onclick = () => selectContainer(container);
+                
+                let icon = '📁';
+                if (container === 'Income◇Expense Log') {
+                    icon = '💎';
+                }
+                
                 card.innerHTML = `
-                    <div class="card-icon">📁</div>
+                    <div class="card-icon">${icon}</div>
                     <div class="card-title">${container}</div>
-                    <div class="card-subtitle">${containers[container].length} accounts</div>
+                    <div class="card-subtitle">${containers[container].length} ${containers[container].length === 1 ? 'account' : 'accounts'}</div>
                 `;
                 grid.appendChild(card);
             });
@@ -1061,6 +1479,7 @@
 
         function selectContainer(container) {
             currentContainer = container;
+            isIncomeExpenseLog = (container === 'Income◇Expense Log');
             navigateToAccounts();
         }
 
@@ -1086,7 +1505,7 @@
                 card.className = 'card account-' + account.code.toLowerCase();
                 card.onclick = () => selectAccount(account);
                 card.innerHTML = `
-                    <div class="card-icon">🧮</div>
+                    <div class="card-icon">${isIncomeExpenseLog ? '💎' : '🧮'}</div>
                     <div class="card-title">${account.code}</div>
                     <div class="card-subtitle">${account.name}</div>
                 `;
@@ -1113,6 +1532,29 @@
             document.getElementById('accountTitle').textContent = currentAccount.code;
             document.getElementById('accountSubtitle').textContent = currentAccount.name;
             
+            // Configure form for Income/Expense Log
+            if (isIncomeExpenseLog) {
+                document.getElementById('formTitle').textContent = 'New Income/Expense Entry';
+                document.getElementById('codeGroup').classList.add('hidden');
+                document.getElementById('categoryGroup').classList.remove('hidden');
+                document.getElementById('amountGroup').classList.add('hidden');
+                document.getElementById('typeGroup').classList.add('hidden');
+                document.getElementById('incomeGroup').classList.remove('hidden');
+                document.getElementById('expenseGroup').classList.remove('hidden');
+                document.getElementById('entryCode').required = false;
+                document.getElementById('entryAmount').required = false;
+            } else {
+                document.getElementById('formTitle').textContent = 'New Financial Entry';
+                document.getElementById('codeGroup').classList.remove('hidden');
+                document.getElementById('categoryGroup').classList.add('hidden');
+                document.getElementById('amountGroup').classList.remove('hidden');
+                document.getElementById('typeGroup').classList.remove('hidden');
+                document.getElementById('incomeGroup').classList.add('hidden');
+                document.getElementById('expenseGroup').classList.add('hidden');
+                document.getElementById('entryCode').required = true;
+                document.getElementById('entryAmount').required = true;
+            }
+            
             renderTransactions();
         }
 
@@ -1127,21 +1569,43 @@
             
             const key = `${currentDiv}-${currentContainer}-${currentAccount.code}`;
             
-            const entry = {
-                id: Date.now(),
-                date: document.getElementById('entryDate').value,
-                code: document.getElementById('entryCode').value,
-                description: document.getElementById('entryDesc').value,
-                amount: parseFloat(document.getElementById('entryAmount').value),
-                type: document.getElementById('entryType').value,
-                timestamp: new Date().toISOString(),
-                createdBy: currentUser.email,
-                editCount: 0,
-                lastEditTime: null,
-                currency: currentUser.currency.symbol
-            };
+            let entry;
             
-            // Save to Firestore
+            if (isIncomeExpenseLog) {
+                const income = parseFloat(document.getElementById('entryIncome').value) || 0;
+                const expense = parseFloat(document.getElementById('entryExpense').value) || 0;
+                
+                entry = {
+                    id: Date.now(),
+                    date: document.getElementById('entryDate').value,
+                    category: document.getElementById('entryCategory').value,
+                    description: document.getElementById('entryDesc').value,
+                    income: income,
+                    expense: expense,
+                    total: income - expense,
+                    timestamp: new Date().toISOString(),
+                    createdBy: currentUser.email,
+                    editCount: 0,
+                    lastEditTime: null,
+                    currency: currentUser.currency.symbol,
+                    type: 'income_expense'
+                };
+            } else {
+                entry = {
+                    id: Date.now(),
+                    date: document.getElementById('entryDate').value,
+                    code: document.getElementById('entryCode').value,
+                    description: document.getElementById('entryDesc').value,
+                    amount: parseFloat(document.getElementById('entryAmount').value),
+                    type: document.getElementById('entryType').value,
+                    timestamp: new Date().toISOString(),
+                    createdBy: currentUser.email,
+                    editCount: 0,
+                    lastEditTime: null,
+                    currency: currentUser.currency.symbol
+                };
+            }
+            
             db.collection('financialRecords').add({
                 userId: currentUser.uid,
                 accountKey: key,
@@ -1149,7 +1613,8 @@
                 createdTimestamp: Date.now(),
                 division: currentDiv,
                 container: currentContainer,
-                account: currentAccount.code
+                account: currentAccount.code,
+                isIncomeExpense: isIncomeExpenseLog
             })
             .then((docRef) => {
                 if (!financialRecords[key]) {
@@ -1163,11 +1628,9 @@
                 }
                 entryEditTimestamps[key][entry.id] = Date.now();
                 
+                // Reset form
+                document.getElementById('transactionForm').reset();
                 document.getElementById('entryDate').valueAsDate = new Date();
-                document.getElementById('entryCode').value = '';
-                document.getElementById('entryDesc').value = '';
-                document.getElementById('entryAmount').value = '';
-                document.getElementById('entryType').value = 'credit';
                 
                 toggleEntryForm();
                 renderTransactions();
@@ -1193,30 +1656,67 @@
                 return;
             }
             
-            const newAmount = prompt('Enter new amount:', entry.amount);
-            if (newAmount === null) return;
-            
-            const newDesc = prompt('Enter new description:', entry.description);
-            if (newDesc === null) return;
-            
-            db.collection('financialRecords').doc(entry.firestoreId).update({
-                'entry.amount': parseFloat(newAmount),
-                'entry.description': newDesc,
-                'entry.editCount': firebase.firestore.FieldValue.increment(1),
-                'entry.lastEditTime': new Date().toISOString()
-            })
-            .then(() => {
-                entry.amount = parseFloat(newAmount);
-                entry.description = newDesc;
-                entry.editCount += 1;
-                entry.lastEditTime = new Date().toISOString();
+            if (isIncomeExpenseLog) {
+                const newIncome = prompt('Enter new income:', entry.income || 0);
+                if (newIncome === null) return;
                 
-                renderTransactions();
-                alert('✅ Entry updated!');
-            })
-            .catch((error) => {
-                alert('❌ Error: ' + error.message);
-            });
+                const newExpense = prompt('Enter new expense:', entry.expense || 0);
+                if (newExpense === null) return;
+                
+                const newDesc = prompt('Enter new description:', entry.description);
+                if (newDesc === null) return;
+                
+                const income = parseFloat(newIncome);
+                const expense = parseFloat(newExpense);
+                
+                db.collection('financialRecords').doc(entry.firestoreId).update({
+                    'entry.income': income,
+                    'entry.expense': expense,
+                    'entry.total': income - expense,
+                    'entry.description': newDesc,
+                    'entry.editCount': firebase.firestore.FieldValue.increment(1),
+                    'entry.lastEditTime': new Date().toISOString()
+                })
+                .then(() => {
+                    entry.income = income;
+                    entry.expense = expense;
+                    entry.total = income - expense;
+                    entry.description = newDesc;
+                    entry.editCount += 1;
+                    entry.lastEditTime = new Date().toISOString();
+                    
+                    renderTransactions();
+                    alert('✅ Entry updated!');
+                })
+                .catch((error) => {
+                    alert('❌ Error: ' + error.message);
+                });
+            } else {
+                const newAmount = prompt('Enter new amount:', entry.amount);
+                if (newAmount === null) return;
+                
+                const newDesc = prompt('Enter new description:', entry.description);
+                if (newDesc === null) return;
+                
+                db.collection('financialRecords').doc(entry.firestoreId).update({
+                    'entry.amount': parseFloat(newAmount),
+                    'entry.description': newDesc,
+                    'entry.editCount': firebase.firestore.FieldValue.increment(1),
+                    'entry.lastEditTime': new Date().toISOString()
+                })
+                .then(() => {
+                    entry.amount = parseFloat(newAmount);
+                    entry.description = newDesc;
+                    entry.editCount += 1;
+                    entry.lastEditTime = new Date().toISOString();
+                    
+                    renderTransactions();
+                    alert('✅ Entry updated!');
+                })
+                .catch((error) => {
+                    alert('❌ Error: ' + error.message);
+                });
+            }
         }
 
         function renderTransactions() {
@@ -1236,78 +1736,383 @@
             
             container.innerHTML = '';
             
-            records.forEach((record, index) => {
-                const item = document.createElement('div');
-                item.className = `transaction-item transaction-${record.type}`;
+            if (isIncomeExpenseLog) {
+                // Render Income/Expense entries
+                let openingBalance = 0;
                 
-                const sign = record.type === 'credit' ? '+' : '-';
-                const amountClass = record.type === 'credit' ? 'amount-credit' : 'amount-debit';
-                
-                const editStatus = canEditEntry(record.id, record);
-                const editButton = editStatus.allowed ? 
-                    `<button onclick="editEntry(${record.id})" style="padding: 5px 10px; background: #00bcd4; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 11px; margin-top: 5px;">✏️ Edit</button>` : 
-                    `<span style="font-size: 10px; color: #999; margin-top: 5px; display: block;">🔒 ${editStatus.reason}</span>`;
-                
-                const editInfo = record.editCount > 0 ? 
-                    `<span style="font-size: 10px; color: #666; display: block; margin-top: 3px;">Edited ${record.editCount} time</span>` : '';
-                
-                item.innerHTML = `
-                    <div style="flex: 1;">
+                records.forEach((record, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'transaction-item';
+                    item.style.background = 'linear-gradient(135deg, #f3e5f5, #e1bee7)';
+                    item.style.borderColor = '#9c27b0';
+                    
+                    const editStatus = canEditEntry(record.id, record);
+                    const editButton = editStatus.allowed ? 
+                        `<button onclick="editEntry(${record.id})" style="padding: 5px 10px; background: #9c27b0; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 11px; margin-top: 5px;">✏️ Edit</button>` : 
+                        `<span style="font-size: 10px; color: #999; margin-top: 5px; display: block;">🔒 ${editStatus.reason}</span>`;
+                    
+                    const editInfo = record.editCount > 0 ? 
+                        `<span style="font-size: 10px; color: #666; display: block; margin-top: 3px;">Edited ${record.editCount} time</span>` : '';
+                    
+                    item.innerHTML = `
+                        <div style="flex: 1;">
+                            <div>
+                                <span class="transaction-code" style="background: #9c27b0; color: white;">${record.category}</span>
+                                <span class="transaction-date">${record.date}</span>
+                            </div>
+                            <div class="transaction-desc">${record.description}</div>
+                            <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                                Income: ${record.currency}${record.income.toFixed(2)} | 
+                                Expense: ${record.currency}${record.expense.toFixed(2)}
+                            </div>
+                            <div style="font-size: 11px; color: #00838f; margin-top: 3px;">By: ${record.createdBy}</div>
+                            ${editInfo}
+                            ${editButton}
+                        </div>
                         <div>
-                            <span class="transaction-code">${record.code}</span>
-                            <span class="transaction-date">${record.date}</span>
+                            <div class="transaction-amount" style="color: ${record.total >= 0 ? '#2e7d32' : '#c62828'};">
+                                ${record.total >= 0 ? '+' : ''}${record.currency}${record.total.toFixed(2)}
+                            </div>
                         </div>
-                        <div class="transaction-desc">${record.description}</div>
-                        <div style="font-size: 11px; color: #00838f; margin-top: 3px;">By: ${record.createdBy}</div>
-                        ${editInfo}
-                        ${editButton}
-                    </div>
-                    <div>
-                        <div class="transaction-amount ${amountClass}">
-                            ${sign}${record.currency || currentUser.currency.symbol}${record.amount.toFixed(2)}
-                        </div>
-                    </div>
+                    `;
+                    
+                    container.appendChild(item);
+                    openingBalance += record.total;
+                });
+                
+                // Show total balance
+                const balanceBanner = document.createElement('div');
+                balanceBanner.className = 'total-banner';
+                balanceBanner.style.background = 'linear-gradient(135deg, #9c27b0, #7b1fa2)';
+                balanceBanner.innerHTML = `
+                    <h4>Current Balance</h4>
+                    <div class="total-amount">${currentUser.currency.symbol}${openingBalance.toFixed(2)}</div>
+                    <p style="font-size: 12px; margin-top: 5px;">Opening: ${currentUser.currency.symbol}0.00 | Closing: ${currentUser.currency.symbol}${openingBalance.toFixed(2)}</p>
                 `;
+                container.appendChild(balanceBanner);
                 
-                container.appendChild(item);
+            } else {
+                // Render regular entries
+                records.forEach((record, index) => {
+                    const item = document.createElement('div');
+                    item.className = `transaction-item transaction-${record.type}`;
+                    
+                    const sign = record.type === 'credit' ? '+' : '-';
+                    const amountClass = record.type === 'credit' ? 'amount-credit' : 'amount-debit';
+                    
+                    const editStatus = canEditEntry(record.id, record);
+                    const editButton = editStatus.allowed ? 
+                        `<button onclick="editEntry(${record.id})" style="padding: 5px 10px; background: #00bcd4; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 11px; margin-top: 5px;">✏️ Edit</button>` : 
+                        `<span style="font-size: 10px; color: #999; margin-top: 5px; display: block;">🔒 ${editStatus.reason}</span>`;
+                    
+                    const editInfo = record.editCount > 0 ? 
+                        `<span style="font-size: 10px; color: #666; display: block; margin-top: 3px;">Edited ${record.editCount} time</span>` : '';
+                    
+                    item.innerHTML = `
+                        <div style="flex: 1;">
+                            <div>
+                                <span class="transaction-code">${record.code}</span>
+                                <span class="transaction-date">${record.date}</span>
+                            </div>
+                            <div class="transaction-desc">${record.description}</div>
+                            <div style="font-size: 11px; color: #00838f; margin-top: 3px;">By: ${record.createdBy}</div>
+                            ${editInfo}
+                            ${editButton}
+                        </div>
+                        <div>
+                            <div class="transaction-amount ${amountClass}">
+                                ${sign}${record.currency || currentUser.currency.symbol}${record.amount.toFixed(2)}
+                            </div>
+                        </div>
+                    `;
+                    
+                    container.appendChild(item);
+                    
+                    if ((index + 1) % 7 === 0) {
+                        const batchStart = Math.floor(index / 7) * 7;
+                        const batch = records.slice(batchStart, index + 1);
+                        const total = batch.reduce((sum, r) => {
+                            return r.type === 'credit' ? sum + r.amount : sum - r.amount;
+                        }, 0);
+                        
+                        const banner = document.createElement('div');
+                        banner.className = 'total-banner';
+                        banner.innerHTML = `
+                            <h4>Total for Entries ${batchStart + 1} - ${index + 1}</h4>
+                            <div class="total-amount">${currentUser.currency.symbol}${total.toFixed(2)}</div>
+                        `;
+                        container.appendChild(banner);
+                    }
+                });
                 
-                if ((index + 1) % 7 === 0) {
-                    const batchStart = Math.floor(index / 7) * 7;
-                    const batch = records.slice(batchStart, index + 1);
+                const lastBatchStart = Math.floor((records.length - 1) / 7) * 7;
+                const remaining = records.length % 7;
+                
+                if (remaining > 0) {
+                    const batch = records.slice(lastBatchStart);
                     const total = batch.reduce((sum, r) => {
                         return r.type === 'credit' ? sum + r.amount : sum - r.amount;
                     }, 0);
                     
                     const banner = document.createElement('div');
                     banner.className = 'total-banner';
+                    banner.style.opacity = '0.8';
                     banner.innerHTML = `
-                        <h4>Total for Entries ${batchStart + 1} - ${index + 1}</h4>
+                        <h4>Running Total (${remaining} ${remaining === 1 ? 'entry' : 'entries'})</h4>
                         <div class="total-amount">${currentUser.currency.symbol}${total.toFixed(2)}</div>
+                        <p style="font-size: 12px; margin-top: 5px;">Will finalize at 7 entries</p>
                     `;
                     container.appendChild(banner);
                 }
-            });
-            
-            const lastBatchStart = Math.floor((records.length - 1) / 7) * 7;
-            const remaining = records.length % 7;
-            
-            if (remaining > 0) {
-                const batch = records.slice(lastBatchStart);
-                const total = batch.reduce((sum, r) => {
-                    return r.type === 'credit' ? sum + r.amount : sum - r.amount;
-                }, 0);
-                
-                const banner = document.createElement('div');
-                banner.className = 'total-banner';
-                banner.style.opacity = '0.8';
-                banner.innerHTML = `
-                    <h4>Running Total (${remaining} ${remaining === 1 ? 'entry' : 'entries'})</h4>
-                    <div class="total-amount">${currentUser.currency.symbol}${total.toFixed(2)}</div>
-                    <p style="font-size: 12px; margin-top: 5px;">Will finalize at 7 entries</p>
-                `;
-                container.appendChild(banner);
             }
         }
+
+        // Email Statement Functions
+        function emailMonthlyStatement() {
+            document.getElementById('emailModal').classList.add('active');
+        }
+
+        function closeEmailModal() {
+            document.getElementById('emailModal').classList.remove('active');
+        }
+
+        function sendEmailStatement(e) {
+            e.preventDefault();
+            
+            const orgEmail = document.getElementById('orgEmail').value;
+            const month = document.getElementById('statementMonth').value;
+            const key = `${currentDiv}-${currentContainer}-${currentAccount.code}`;
+            const records = financialRecords[key] || [];
+            
+            // Filter records for selected month
+            const monthRecords = records.filter(r => r.date.startsWith(month));
+            
+            if (monthRecords.length === 0) {
+                alert('❌ No records found for the selected month.');
+                return;
+            }
+            
+            // Generate statement
+            let statementHTML = `
+                <h2>Monthly Financial Statement</h2>
+                <p><strong>Period:</strong> ${month}</p>
+                <p><strong>Account:</strong> ${currentAccount.code} - ${currentAccount.name}</p>
+                <p><strong>Division:</strong> ${currentDiv}</p>
+                <p><strong>Container:</strong> ${currentContainer}</p>
+                <p><strong>User:</strong> ${currentUser.name} (${currentUser.email})</p>
+                <hr>
+                <table border="1" cellpadding="10" style="border-collapse: collapse; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Code/Category</th>
+                            <th>Description</th>
+                            ${isIncomeExpenseLog ? '<th>Income</th><th>Expense</th><th>Total</th>' : '<th>Type</th><th>Amount</th>'}
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            let grandTotal = 0;
+            
+            monthRecords.forEach(record => {
+                if (isIncomeExpenseLog) {
+                    statementHTML += `
+                        <tr>
+                            <td>${record.date}</td>
+                            <td>${record.category}</td>
+                            <td>${record.description}</td>
+                            <td>${record.currency}${record.income.toFixed(2)}</td>
+                            <td>${record.currency}${record.expense.toFixed(2)}</td>
+                            <td>${record.currency}${record.total.toFixed(2)}</td>
+                        </tr>
+                    `;
+                    grandTotal += record.total;
+                } else {
+                    const amount = record.type === 'credit' ? record.amount : -record.amount;
+                    grandTotal += amount;
+                    statementHTML += `
+                        <tr>
+                            <td>${record.date}</td>
+                            <td>${record.code}</td>
+                            <td>${record.description}</td>
+                            <td>${record.type.toUpperCase()}</td>
+                            <td>${record.currency}${record.amount.toFixed(2)}</td>
+                        </tr>
+                    `;
+                }
+            });
+            
+            statementHTML += `
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="${isIncomeExpenseLog ? 5 : 4}" style="text-align: right;"><strong>Grand Total:</strong></td>
+                            <td><strong>${currentUser.currency.symbol}${grandTotal.toFixed(2)}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            `;
+            
+            // Save submission record
+            db.collection('submissions').doc(currentUser.uid).set({
+                lastSubmission: month,
+                submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                accountKey: key,
+                recordCount: monthRecords.length
+            }, { merge: true })
+            .then(() => {
+                // In production, this would send an actual email via Firebase Functions
+                // For now, we'll simulate it
+                console.log('Statement HTML:', statementHTML);
+                alert(`✅ Monthly statement for ${month} has been prepared!\n\nIn production, this would be emailed to: ${orgEmail}\n\nYour submission has been recorded.`);
+                closeEmailModal();
+                checkMonthlyDeadline();
+            })
+            .catch((error) => {
+                alert('❌ Error recording submission: ' + error.message);
+            });
+        }
+
+        // Admin Functions
+        function viewAllUsers() {
+            if (!currentUser.isAdmin) {
+                alert('❌ Admin access required!');
+                return;
+            }
+            
+            db.collection('users').get()
+                .then((querySnapshot) => {
+                    let html = '<h3>All Users</h3><div style="max-height: 400px; overflow-y: auto;">';
+                    html += '<table border="1" cellpadding="10" style="border-collapse: collapse; width: 100%;"><thead><tr><th>Name</th><th>Email</th><th>Country</th><th>Status</th></tr></thead><tbody>';
+                    
+                    querySnapshot.forEach((doc) => {
+                        const user = doc.data();
+                        const status = user.accountLocked ? '🔒 Locked' : '✅ Active';
+                        html += `<tr><td>${user.name}</td><td>${user.email}</td><td>${user.country}</td><td>${status}</td></tr>`;
+                    });
+                    
+                    html += '</tbody></table></div>';
+                    
+                    document.getElementById('adminModalTitle').textContent = 'All Users';
+                    document.getElementById('adminModalContent').innerHTML = html;
+                    document.getElementById('adminModal').classList.add('active');
+                })
+                .catch((error) => {
+                    alert('❌ Error: ' + error.message);
+                });
+        }
+
+        function unlockUserAccount() {
+            if (!currentUser.isAdmin) {
+                alert('❌ Admin access required!');
+                return;
+            }
+            
+            const email = prompt('Enter user email to unlock:');
+            if (!email) return;
+            
+            db.collection('users').where('email', '==', email).get()
+                .then((querySnapshot) => {
+                    if (querySnapshot.empty) {
+                        alert('❌ User not found!');
+                        return;
+                    }
+                    
+                    querySnapshot.forEach((doc) => {
+                        db.collection('users').doc(doc.id).update({
+                            accountLocked: false,
+                            lockReason: null,
+                            unlockedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            unlockedBy: currentUser.email
+                        })
+                        .then(() => {
+                            alert('✅ Account unlocked successfully!');
+                        });
+                    });
+                })
+                .catch((error) => {
+                    alert('❌ Error: ' + error.message);
+                });
+        }
+
+        function viewAllSubmissions() {
+            if (!currentUser.isAdmin) {
+                alert('❌ Admin access required!');
+                return;
+            }
+            
+            db.collection('submissions').get()
+                .then((querySnapshot) => {
+                    let html = '<h3>Monthly Submissions</h3><div style="max-height: 400px; overflow-y: auto;">';
+                    html += '<table border="1" cellpadding="10" style="border-collapse: collapse; width: 100%;"><thead><tr><th>User ID</th><th>Last Submission</th><th>Records</th><th>Date</th></tr></thead><tbody>';
+                    
+                    querySnapshot.forEach((doc) => {
+                        const sub = doc.data();
+                        const date = sub.submittedAt ? new Date(sub.submittedAt.seconds * 1000).toLocaleDateString() : 'N/A';
+                        html += `<tr><td>${doc.id}</td><td>${sub.lastSubmission}</td><td>${sub.recordCount}</td><td>${date}</td></tr>`;
+                    });
+                    
+                    html += '</tbody></table></div>';
+                    
+                    document.getElementById('adminModalTitle').textContent = 'All Submissions';
+                    document.getElementById('adminModalContent').innerHTML = html;
+                    document.getElementById('adminModal').classList.add('active');
+                })
+                .catch((error) => {
+                    alert('❌ Error: ' + error.message);
+                });
+        }
+
+        function sendBulkReminders() {
+            if (!currentUser.isAdmin) {
+                alert('❌ Admin access required!');
+                return;
+            }
+            
+            const now = new Date();
+            const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+            
+            db.collection('users').get()
+                .then((querySnapshot) => {
+                    let remindersSent = 0;
+                    
+                    querySnapshot.forEach((userDoc) => {
+                        const userData = userDoc.data();
+                        
+                        db.collection('submissions').doc(userDoc.id).get()
+                            .then((subDoc) => {
+                                const subData = subDoc.data();
+                                
+                                if (!subData || subData.lastSubmission !== currentMonth) {
+                                    // User hasn't submitted this month
+                                    console.log(`Reminder needed for: ${userData.email}`);
+                                    remindersSent++;
+                                    
+                                    // In production, this would trigger Firebase Cloud Function to send email
+                                    sendPushNotification(
+                                        '📊 Monthly Statement Reminder',
+                                        `${userData.name}, please submit your monthly financial statement!`
+                                    );
+                                }
+                            });
+                    });
+                    
+                    setTimeout(() => {
+                        alert(`✅ Sent ${remindersSent} reminder(s)!`);
+                    }, 1000);
+                })
+                .catch((error) => {
+                    alert('❌ Error: ' + error.message);
+                });
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.remove('active');
+        }
+
+        // Check deadlines periodically
+        setInterval(checkMonthlyDeadline, 60 * 60 * 1000); // Check every hour
     </script>
 </body>
 </html>
