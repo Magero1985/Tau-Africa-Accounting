@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tau Africa Accounting Friend</title>
+      <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+</head>
     <style>
         * {
             margin: 0;
@@ -743,15 +748,20 @@
     </div>
 
     <script>
-        // Firebase Configuration Template (Add your credentials here)
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
+        // Firebase Configuration
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "your-project.firebaseapp.com",
+  projectId: "your-project-id",
+  storageBucket: "your-project.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "your-app-id"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
         // Firebase Security Rules Template:
         /*
@@ -831,7 +841,100 @@
         function loadData() {
             const stored = localStorage.getItem('tauAfricaRecords');
             if (stored) {
-                financialRecords = JSON.parse(stored);
+       // REGISTRATION WITH EMAIL VERIFICATION
+function handleRegister(e) {
+    e.preventDefault();
+    const password = document.getElementById('regPassword').value;
+    const confirm = document.getElementById('regConfirm').value;
+    
+    if (password !== confirm) {
+        alert('❌ Passwords do not match!');
+        return;
+    }
+
+    const email = document.getElementById('regEmail').value;
+    const name = document.getElementById('regName').value;
+
+    // Create user with Firebase
+    auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            // Send verification email
+            return userCredential.user.sendEmailVerification();
+        })
+        .then(() => {
+            // Save user profile to Firestore
+            return db.collection('users').doc(auth.currentUser.uid).set({
+                name: name,
+                email: email,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        })
+        .then(() => {
+            alert('✅ Registration successful! Please check your email to verify your account.');
+            showLogin();
+        })
+        .catch((error) => {
+            alert('❌ Registration error: ' + error.message);
+        });
+}
+
+// LOGIN WITH FIREBASE
+function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            if (!userCredential.user.emailVerified) {
+                alert('⚠️ Please verify your email before logging in. Check your inbox!');
+                auth.signOut();
+                return;
+            }
+            // Will be handled by onAuthStateChanged
+        })
+        .catch((error) => {
+            alert('❌ Login error: ' + error.message);
+        });
+}
+
+// MONITOR AUTHENTICATION STATE
+auth.onAuthStateChanged((user) => {
+    if (user && user.emailVerified) {
+        // User is signed in and verified
+        db.collection('users').doc(user.uid).get()
+            .then((doc) => {
+                currentUser = {
+                    uid: user.uid,
+                    email: user.email,
+                    name: doc.exists ? doc.data().name : user.email.split('@')[0]
+                };
+                loadData();
+                showMainApp();
+            });
+    } else if (user && !user.emailVerified) {
+        // User exists but email not verified
+        document.getElementById('authScreen').classList.remove('hidden');
+        document.getElementById('mainApp').classList.add('hidden');
+    } else {
+        // User is signed out
+        document.getElementById('authScreen').classList.remove('hidden');
+        document.getElementById('mainApp').classList.add('hidden');
+        showLogin();
+    }
+});
+
+// LOGOUT
+function logout() {
+    auth.signOut().then(() => {
+        currentUser = null;
+        currentOrg = null;
+        currentDivision = null;
+        currentContainer = null;
+        currentAccount = null;
+        alert('✅ Logged out successfully!');
+    });
+}         financialRecords = JSON.parse(stored);
             }
         }
 
@@ -839,92 +942,7 @@
             localStorage.setItem('tauAfricaRecords', JSON.stringify(financialRecords));
         }
 
-        // Authentication
-        function showLogin() {
-            document.getElementById('loginForm').classList.remove('hidden');
-            document.getElementById('registerForm').classList.add('hidden');
-            document.getElementById('verifyForm').classList.add('hidden');
-        }
-
-        function showRegister() {
-            document.getElementById('loginForm').classList.add('hidden');
-            document.getElementById('registerForm').classList.remove('hidden');
-            document.getElementById('verifyForm').classList.add('hidden');
-        }
-
-        function handleLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            // In production, Firebase will handle authentication
-            const storedUser = localStorage.getItem('tauAfricaUser_' + email);
-            if (storedUser) {
-                currentUser = JSON.parse(storedUser);
-            } else {
-                currentUser = { 
-                    email: email, 
-                    name: email.split('@')[0],
-                    country: 'KE',
-                    currency: currencyMap['KE']
-                };
-            }
-            loadData();
-            showMainApp();
-        }
-
-        function handleRegister(e) {
-            e.preventDefault();
-            const password = document.getElementById('regPassword').value;
-            const confirm = document.getElementById('regConfirm').value;
-            
-            if (password !== confirm) {
-                alert('Passwords do not match!');
-                return;
-            }
-
-            const country = document.getElementById('regCountry').value;
-            pendingUserData = {
-                name: document.getElementById('regName').value,
-                email: document.getElementById('regEmail').value,
-                country: country,
-                currency: currencyMap[country]
-            };
-
-            document.getElementById('verifyEmail').textContent = pendingUserData.email;
-            document.getElementById('loginForm').classList.add('hidden');
-            document.getElementById('registerForm').classList.add('hidden');
-            document.getElementById('verifyForm').classList.remove('hidden');
-            
-            // In production, Firebase will send actual verification email
-            alert('In production: Verification email will be sent via Firebase Authentication');
-        }
-
-        function handleVerify(e) {
-            e.preventDefault();
-            currentUser = pendingUserData;
-            // Store user data locally (will be Firebase in production)
-            localStorage.setItem('tauAfricaUser_' + currentUser.email, JSON.stringify(currentUser));
-            loadData();
-            showMainApp();
-        }
-
-        function showMainApp() {
-            document.getElementById('authScreen').classList.add('hidden');
-            document.getElementById('mainApp').classList.remove('hidden');
-            document.getElementById('userName').textContent = currentUser.name;
-            document.getElementById('userCurrency').textContent = 'Currency: ' + currentUser.currency.symbol + ' (' + currentUser.currency.name + ')';
-            document.getElementById('currencySymbol').textContent = currentUser.currency.symbol;
-            navigateToOrgs();
-        }
-
-        function logout() {
-            currentUser = null;
-            currentDiv = null;
-            currentContainer = null;
-            currentAccount = null;
-            document.getElementById('authScreen').classList.remove('hidden');
-            document.getElementById('mainApp').classList.add('hidden');
-            showLogin();
-        }
+        
 
         // Navigation
         function navigateToOrgs() {
@@ -1065,7 +1083,154 @@
             financialRecords[key].push(entry);
             saveData();
             
-            // In production, this will be saved to Firebase Firestore
+            // LOAD DATA FROM FIRESTORE
+function loadData() {
+    if (!currentUser) return;
+    
+    db.collection('financialRecords')
+        .where('userId', '==', currentUser.uid)
+        .get()
+        .then((querySnapshot) => {
+            financialRecords = {};
+            entryEditTimestamps = {};
+            
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                const key = data.accountKey;
+                
+                if (!financialRecords[key]) {
+                    financialRecords[key] = [];
+                }
+                
+                financialRecords[key].push({
+                    ...data.entry,
+                    firestoreId: doc.id
+                });
+                
+                // Restore timestamps
+                if (!entryEditTimestamps[key]) {
+                    entryEditTimestamps[key] = {};
+                }
+                entryEditTimestamps[key][data.entry.id] = data.createdTimestamp;
+            });
+            
+            if (currentAccount) {
+                renderTransactions();
+            }
+        })
+        .catch((error) => {
+            console.error("Error loading data:", error);
+        });
+}
+
+// SAVE DATA TO FIRESTORE
+function saveData() {
+    // This will be called by addEntry - data saved immediately
+}
+
+// UPDATE addEntry FUNCTION
+function addEntry(e) {
+    e.preventDefault();
+    
+    const key = `${currentOrg}-${currentDivision}-${currentContainer}-${currentAccount}`;
+    
+    const entry = {
+        id: Date.now(),
+        date: document.getElementById('entryDate').value,
+        code: document.getElementById('entryCode').value,
+        description: document.getElementById('entryDesc').value,
+        amount: parseFloat(document.getElementById('entryAmount').value),
+        type: document.getElementById('entryType').value,
+        timestamp: new Date().toISOString(),
+        createdBy: currentUser.email,
+        editCount: 0,
+        lastEditTime: null
+    };
+    
+    // Save to Firestore
+    db.collection('financialRecords').add({
+        userId: currentUser.uid,
+        accountKey: key,
+        entry: entry,
+        createdTimestamp: Date.now(),
+        organization: currentOrg,
+        division: currentDivision,
+        container: currentContainer,
+        account: currentAccount
+    })
+    .then((docRef) => {
+        // Add to local state
+        if (!financialRecords[key]) {
+            financialRecords[key] = [];
+        }
+        entry.firestoreId = docRef.id;
+        financialRecords[key].push(entry);
+        
+        // Track timestamp
+        if (!entryEditTimestamps[key]) {
+            entryEditTimestamps[key] = {};
+        }
+        entryEditTimestamps[key][entry.id] = Date.now();
+        
+        // Reset form
+        document.getElementById('entryDate').valueAsDate = new Date();
+        document.getElementById('entryCode').value = '';
+        document.getElementById('entryDesc').value = '';
+        document.getElementById('entryAmount').value = '';
+        document.getElementById('entryType').value = 'credit';
+        
+        toggleEntryForm();
+        renderTransactions();
+        alert('✅ Entry added successfully!');
+    })
+    .catch((error) => {
+        alert('❌ Error adding entry: ' + error.message);
+    });
+}
+
+// UPDATE editEntry FUNCTION
+function editEntry(entryId) {
+    const key = `${currentOrg}-${currentDivision}-${currentContainer}-${currentAccount}`;
+    const records = financialRecords[key];
+    const entryIndex = records.findIndex(r => r.id === entryId);
+    
+    if (entryIndex === -1) return;
+    
+    const entry = records[entryIndex];
+    const editStatus = canEditEntry(entryId, entry);
+    
+    if (!editStatus.allowed) {
+        alert('❌ ' + editStatus.reason);
+        return;
+    }
+    
+    const newAmount = prompt('Enter new amount:', entry.amount);
+    if (newAmount === null) return;
+    
+    const newDesc = prompt('Enter new description:', entry.description);
+    if (newDesc === null) return;
+    
+    // Update in Firestore
+    db.collection('financialRecords').doc(entry.firestoreId).update({
+        'entry.amount': parseFloat(newAmount),
+        'entry.description': newDesc,
+        'entry.editCount': firebase.firestore.FieldValue.increment(1),
+        'entry.lastEditTime': new Date().toISOString()
+    })
+    .then(() => {
+        // Update local state
+        entry.amount = parseFloat(newAmount);
+        entry.description = newDesc;
+        entry.editCount += 1;
+        entry.lastEditTime = new Date().toISOString();
+        
+        renderTransactions();
+        alert('✅ Entry updated successfully!');
+    })
+    .catch((error) => {
+        alert('❌ Error updating entry: ' + error.message);
+    });
+}
             // with security rules enforcing the 4-hour edit window
             
             // Reset form
