@@ -292,12 +292,16 @@
         }
 
         /* Account specific colors */
-        .account-ca { background: linear-gradient(135deg, #e0f7fa, #b2ebf2); border-color: #00bcd4; }
+        .account-sa { background: linear-gradient(135deg, #e0f7fa, #b2ebf2); border-color: #00bcd4; }
         .account-ta { background: linear-gradient(135deg, #e0f2f1, #b2dfdb); border-color: #26a69a; }
-        .account-sa { background: linear-gradient(135deg, #e1f5fe, #b3e5fc); border-color: #039be5; }
-        .account-ba { background: linear-gradient(135deg, #e0f7fa, #80deea); border-color: #00acc1; }
-        .account-da { background: linear-gradient(135deg, #b2ebf2, #80deea); border-color: #00bcd4; }
-        .account-pa { background: linear-gradient(135deg, #b2dfdb, #80cbc4); border-color: #26a69a; }
+        .account-ca { background: linear-gradient(135deg, #e1f5fe, #b3e5fc); border-color: #039be5; }
+        .account-tia { background: linear-gradient(135deg, #e0f7fa, #80deea); border-color: #00acc1; }
+        .account-ea { background: linear-gradient(135deg, #b2ebf2, #80deea); border-color: #00bcd4; }
+        .account-da { background: linear-gradient(135deg, #b2dfdb, #80cbc4); border-color: #26a69a; }
+        .account-pa { background: linear-gradient(135deg, #e1f5fe, #81d4fa); border-color: #0288d1; }
+        .account-ba { background: linear-gradient(135deg, #e0f2f1, #80cbc4); border-color: #009688; }
+        .account-fa { background: linear-gradient(135deg, #e0f7fa, #b2ebf2); border-color: #00bcd4; }
+        .account-hca { background: linear-gradient(135deg, #b2dfdb, #80cbc4); border-color: #00897b; }
 
         /* Main Panel */
         .main-panel {
@@ -482,6 +486,16 @@
             transform: translateY(-2px);
         }
 
+        .firebase-notice {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -539,6 +553,20 @@
                         <input type="text" id="regName" required placeholder="Enter your full name">
                     </div>
                     <div class="form-group">
+                        <label>🌍 Country</label>
+                        <select id="regCountry" required>
+                            <option value="">Select your country</option>
+                            <option value="KE">Kenya (KSh)</option>
+                            <option value="TZ">Tanzania (TZS)</option>
+                            <option value="UG">Uganda (UGX)</option>
+                            <option value="NG">Nigeria (₦)</option>
+                            <option value="ZA">South Africa (R)</option>
+                            <option value="US">United States ($)</option>
+                            <option value="GB">United Kingdom (£)</option>
+                            <option value="EU">Europe (€)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>📧 Email Address</label>
                         <input type="email" id="regEmail" required placeholder="your.email@example.com">
                     </div>
@@ -572,6 +600,11 @@
 
         <!-- Main Application -->
         <div id="mainApp" class="hidden">
+            <!-- Firebase Notice -->
+            <div class="firebase-notice">
+                ⚙️ <strong>Firebase Configuration Ready:</strong> Add your Firebase credentials to enable real-time authentication, cloud storage, and secure data management with 4-hour edit window rules.
+            </div>
+
             <!-- Header -->
             <div class="header">
                 <div class="header-content">
@@ -584,7 +617,8 @@
                     </div>
                     <div class="header-right">
                         <div class="user-info">
-                            Welcome, <strong id="userName">User</strong>
+                            Welcome, <strong id="userName">User</strong><br>
+                            <small id="userCurrency">Currency: KSh</small>
                         </div>
                         <button onclick="logout()" class="btn btn-danger btn-small">🚪 Logout</button>
                     </div>
@@ -593,8 +627,8 @@
 
             <!-- Breadcrumb -->
             <div class="breadcrumb">
-                <span class="breadcrumb-item" onclick="navigateToOrgs()">Organizations</span>
-                <span id="breadcrumbOrg" class="hidden">
+                <span class="breadcrumb-item" onclick="navigateToOrgs()">Tau Africa</span>
+                <span id="breadcrumbDiv" class="hidden">
                     <span class="breadcrumb-separator">›</span>
                     <span class="breadcrumb-item" onclick="navigateToContainers()"></span>
                 </span>
@@ -608,14 +642,19 @@
                 </span>
             </div>
 
-            <!-- Organizations View -->
-            <div id="orgsView">
-                <h2 style="color: #00695c; margin-bottom: 20px;">Select Organization</h2>
+            <!-- Divisions View -->
+            <div id="divsView">
+                <h2 style="color: #00695c; margin-bottom: 20px;">Select Division</h2>
                 <div class="cards-grid">
-                    <div class="card" onclick="selectOrg('TAU AFRICA INTL')">
+                    <div class="card" onclick="selectDiv('PAR SIRAI')">
                         <div class="card-icon">🏢</div>
-                        <div class="card-title">TAU AFRICA INTL</div>
-                        <div class="card-subtitle">3 containers</div>
+                        <div class="card-title">PAR SIRAI</div>
+                        <div class="card-subtitle">2 containers</div>
+                    </div>
+                    <div class="card" onclick="selectDiv('VALENTA')">
+                        <div class="card-icon">🏢</div>
+                        <div class="card-title">VALENTA</div>
+                        <div class="card-subtitle">2 containers</div>
                     </div>
                 </div>
             </div>
@@ -665,7 +704,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label>💵 Amount</label>
+                                    <label>💵 Amount (<span id="currencySymbol">KSh</span>)</label>
                                     <input type="number" step="0.01" id="entryAmount" required placeholder="0.00">
                                 </div>
                                 <div class="form-group">
@@ -704,37 +743,82 @@
     </div>
 
     <script>
-        // Data structures
-        const organizations = {
-            'TAU AFRICA INTL': {
-                'FABRICAT': ['CA', 'TA', 'SA', 'BA', 'DA', 'PA'],
-                'TAUAFRICA': ['RAPIDAN', 'CLC'],
-                'VALEMA': ['SING', 'EQUINS', 'CORPORATE', 'BIVINGS1', 'BA', 'TA', 'FA', 'HA', 'CA']
-            }
+        // Firebase Configuration Template (Add your credentials here)
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
 
-        const accountNames = {
-            'DSA': 'Sovereignty Account',
-            'CA': 'Community Account',
-            'TA': 'Title Account (Personal + Reference)',
-            'SA': 'Savings Account',
-            'EA': 'Everent Account',
-            'DA': 'Development Account',
-            'PA': 'Personal Account',
-            'BA': 'Business Account',
-            'FA': 'Foundation Account',
-            'HA': 'Holdings Account',
-            'CLC': 'CLC Account',
-            'RAPIDAN': 'Rapidan Account',
-            'SING': 'Sing Account',
-            'EQUINS': 'Equins Account',
-            'CORPORATE': 'Corporate Account',
-            'BIVINGS1': 'Bivings Account'
+        // Firebase Security Rules Template:
+        /*
+        rules_version = '2';
+        service cloud.firestore {
+          match /databases/{database}/documents {
+            match /users/{userId}/entries/{entryId} {
+              allow read: if request.auth != null;
+              allow create: if request.auth != null && request.auth.uid == userId;
+              allow update: if request.auth != null && 
+                            request.auth.uid == userId && 
+                            request.time < resource.data.timestamp + duration.value(4, 'h');
+              allow delete: if false;
+            }
+            match /users/{userId}/entries/{entryId} {
+              allow read: if request.auth != null && 
+                         (request.auth.token.admin == true || request.auth.uid == userId);
+            }
+          }
+        }
+        */
+
+        // Currency mapping
+        const currencyMap = {
+            'KE': { symbol: 'KSh', name: 'Kenyan Shilling' },
+            'TZ': { symbol: 'TZS', name: 'Tanzanian Shilling' },
+            'UG': { symbol: 'UGX', name: 'Ugandan Shilling' },
+            'NG': { symbol: '₦', name: 'Nigerian Naira' },
+            'ZA': { symbol: 'R', name: 'South African Rand' },
+            'US': { symbol: '$', name: 'US Dollar' },
+            'GB': { symbol: '£', name: 'British Pound' },
+            'EU': { symbol: '€', name: 'Euro' }
+        };
+
+        // Organization structure based on new diagram
+        const organization = {
+            'TAU AFRICA': {
+                'PAR SIRAI': {
+                    'AUFFI': [
+                        { code: 'SA', name: 'Savings Account' },
+                        { code: 'TA', name: 'Trust Account' }
+                    ],
+                    'CLC': [
+                        { code: 'TiA', name: 'Tithe Account' },
+                        { code: 'SA', name: 'Seed Account' },
+                        { code: 'EA', name: 'Event Account' },
+                        { code: 'DA', name: 'Development Account' }
+                    ]
+                },
+                'VALENTA': {
+                    'Single Business': [
+                        { code: 'PA', name: 'Personal Account' },
+                        { code: 'BA', name: 'Business Account' }
+                    ],
+                    'Corporate Business': [
+                        { code: 'CA', name: 'Community Account' },
+                        { code: 'FA', name: 'Foundation Account' },
+                        { code: 'HcA', name: 'Holding Co Account' },
+                        { code: 'BA', name: 'Business Account' }
+                    ]
+                }
+            }
         };
 
         // State management
         let currentUser = null;
-        let currentOrg = null;
+        let currentDiv = null;
         let currentContainer = null;
         let currentAccount = null;
         let financialRecords = {};
@@ -771,7 +855,18 @@
         function handleLogin(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value;
-            currentUser = { email: email, name: email.split('@')[0] };
+            // In production, Firebase will handle authentication
+            const storedUser = localStorage.getItem('tauAfricaUser_' + email);
+            if (storedUser) {
+                currentUser = JSON.parse(storedUser);
+            } else {
+                currentUser = { 
+                    email: email, 
+                    name: email.split('@')[0],
+                    country: 'KE',
+                    currency: currencyMap['KE']
+                };
+            }
             loadData();
             showMainApp();
         }
@@ -786,20 +881,28 @@
                 return;
             }
 
+            const country = document.getElementById('regCountry').value;
             pendingUserData = {
                 name: document.getElementById('regName').value,
-                email: document.getElementById('regEmail').value
+                email: document.getElementById('regEmail').value,
+                country: country,
+                currency: currencyMap[country]
             };
 
             document.getElementById('verifyEmail').textContent = pendingUserData.email;
             document.getElementById('loginForm').classList.add('hidden');
             document.getElementById('registerForm').classList.add('hidden');
             document.getElementById('verifyForm').classList.remove('hidden');
+            
+            // In production, Firebase will send actual verification email
+            alert('In production: Verification email will be sent via Firebase Authentication');
         }
 
         function handleVerify(e) {
             e.preventDefault();
             currentUser = pendingUserData;
+            // Store user data locally (will be Firebase in production)
+            localStorage.setItem('tauAfricaUser_' + currentUser.email, JSON.stringify(currentUser));
             loadData();
             showMainApp();
         }
@@ -808,12 +911,14 @@
             document.getElementById('authScreen').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
             document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userCurrency').textContent = 'Currency: ' + currentUser.currency.symbol + ' (' + currentUser.currency.name + ')';
+            document.getElementById('currencySymbol').textContent = currentUser.currency.symbol;
             navigateToOrgs();
         }
 
         function logout() {
             currentUser = null;
-            currentOrg = null;
+            currentDiv = null;
             currentContainer = null;
             currentAccount = null;
             document.getElementById('authScreen').classList.remove('hidden');
@@ -823,22 +928,22 @@
 
         // Navigation
         function navigateToOrgs() {
-            currentOrg = null;
+            currentDiv = null;
             currentContainer = null;
             currentAccount = null;
             
-            document.getElementById('orgsView').classList.remove('hidden');
+            document.getElementById('divsView').classList.remove('hidden');
             document.getElementById('containersView').classList.add('hidden');
             document.getElementById('accountsView').classList.add('hidden');
             document.getElementById('accountDetailsView').classList.add('hidden');
             
-            document.getElementById('breadcrumbOrg').classList.add('hidden');
+            document.getElementById('breadcrumbDiv').classList.add('hidden');
             document.getElementById('breadcrumbContainer').classList.add('hidden');
             document.getElementById('breadcrumbAccount').classList.add('hidden');
         }
 
-        function selectOrg(org) {
-            currentOrg = org;
+        function selectDiv(div) {
+            currentDiv = div;
             navigateToContainers();
         }
 
@@ -846,27 +951,28 @@
             currentContainer = null;
             currentAccount = null;
             
-            document.getElementById('orgsView').classList.add('hidden');
+            document.getElementById('divsView').classList.add('hidden');
             document.getElementById('containersView').classList.remove('hidden');
             document.getElementById('accountsView').classList.add('hidden');
             document.getElementById('accountDetailsView').classList.add('hidden');
             
-            document.getElementById('breadcrumbOrg').classList.remove('hidden');
-            document.getElementById('breadcrumbOrg').querySelector('.breadcrumb-item').textContent = currentOrg;
+            document.getElementById('breadcrumbDiv').classList.remove('hidden');
+            document.getElementById('breadcrumbDiv').querySelector('.breadcrumb-item').textContent = currentDiv;
             document.getElementById('breadcrumbContainer').classList.add('hidden');
             document.getElementById('breadcrumbAccount').classList.add('hidden');
             
             const grid = document.getElementById('containersGrid');
             grid.innerHTML = '';
             
-            Object.keys(organizations[currentOrg]).forEach(container => {
+            const containers = organization['TAU AFRICA'][currentDiv];
+            Object.keys(containers).forEach(container => {
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.onclick = () => selectContainer(container);
                 card.innerHTML = `
                     <div class="card-icon">📁</div>
                     <div class="card-title">${container}</div>
-                    <div class="card-subtitle">${organizations[currentOrg][container].length} accounts</div>
+                    <div class="card-subtitle">${containers[container].length} accounts</div>
                 `;
                 grid.appendChild(card);
             });
@@ -880,12 +986,12 @@
         function navigateToAccounts() {
             currentAccount = null;
             
-            document.getElementById('orgsView').classList.add('hidden');
+            document.getElementById('divsView').classList.add('hidden');
             document.getElementById('containersView').classList.add('hidden');
             document.getElementById('accountsView').classList.remove('hidden');
             document.getElementById('accountDetailsView').classList.add('hidden');
             
-            document.getElementById('breadcrumbOrg').classList.remove('hidden');
+            document.getElementById('breadcrumbDiv').classList.remove('hidden');
             document.getElementById('breadcrumbContainer').classList.remove('hidden');
             document.getElementById('breadcrumbContainer').querySelector('.breadcrumb-item').textContent = currentContainer;
             document.getElementById('breadcrumbAccount').classList.add('hidden');
@@ -893,14 +999,15 @@
             const grid = document.getElementById('accountsGrid');
             grid.innerHTML = '';
             
-            organizations[currentOrg][currentContainer].forEach(account => {
+            const accounts = organization['TAU AFRICA'][currentDiv][currentContainer];
+            accounts.forEach(account => {
                 const card = document.createElement('div');
-                card.className = 'card account-' + account.toLowerCase();
+                card.className = 'card account-' + account.code.toLowerCase();
                 card.onclick = () => selectAccount(account);
                 card.innerHTML = `
                     <div class="card-icon">🧮</div>
-                    <div class="card-title">${account}</div>
-                    <div class="card-subtitle">${accountNames[account] || account}</div>
+                    <div class="card-title">${account.code}</div>
+                    <div class="card-subtitle">${account.name}</div>
                 `;
                 grid.appendChild(card);
             });
@@ -912,18 +1019,18 @@
         }
 
         function showAccountDetails() {
-            document.getElementById('orgsView').classList.add('hidden');
+            document.getElementById('divsView').classList.add('hidden');
             document.getElementById('containersView').classList.add('hidden');
             document.getElementById('accountsView').classList.add('hidden');
             document.getElementById('accountDetailsView').classList.remove('hidden');
             
-            document.getElementById('breadcrumbOrg').classList.remove('hidden');
+            document.getElementById('breadcrumbDiv').classList.remove('hidden');
             document.getElementById('breadcrumbContainer').classList.remove('hidden');
             document.getElementById('breadcrumbAccount').classList.remove('hidden');
-            document.getElementById('breadcrumbAccount').querySelector('.breadcrumb-current').textContent = currentAccount;
+            document.getElementById('breadcrumbAccount').querySelector('.breadcrumb-current').textContent = currentAccount.code;
             
-            document.getElementById('accountTitle').textContent = currentAccount;
-            document.getElementById('accountSubtitle').textContent = accountNames[currentAccount] || currentAccount;
+            document.getElementById('accountTitle').textContent = currentAccount.code;
+            document.getElementById('accountSubtitle').textContent = currentAccount.name;
             
             renderTransactions();
         }
@@ -937,11 +1044,12 @@
         function addEntry(e) {
             e.preventDefault();
             
-            const key = `${currentOrg}-${currentContainer}-${currentAccount}`;
+            const key = `${currentDiv}-${currentContainer}-${currentAccount.code}`;
             if (!financialRecords[key]) {
                 financialRecords[key] = [];
             }
             
+            const now = new Date();
             const entry = {
                 id: Date.now(),
                 date: document.getElementById('entryDate').value,
@@ -949,11 +1057,16 @@
                 description: document.getElementById('entryDesc').value,
                 amount: parseFloat(document.getElementById('entryAmount').value),
                 type: document.getElementById('entryType').value,
-                timestamp: new Date().toISOString()
+                timestamp: now.toISOString(),
+                currency: currentUser.currency.symbol,
+                editableUntil: new Date(now.getTime() + (4 * 60 * 60 * 1000)).toISOString() // 4 hours from now
             };
             
             financialRecords[key].push(entry);
             saveData();
+            
+            // In production, this will be saved to Firebase Firestore
+            // with security rules enforcing the 4-hour edit window
             
             // Reset form
             document.getElementById('entryDate').valueAsDate = new Date();
@@ -964,11 +1077,17 @@
             
             toggleEntryForm();
             renderTransactions();
-            alert('Entry added successfully!');
+            alert('Entry added successfully! You can edit this entry for the next 4 hours.');
+        }
+
+        function canEdit(entry) {
+            const now = new Date();
+            const editableUntil = new Date(entry.editableUntil);
+            return now < editableUntil;
         }
 
         function renderTransactions() {
-            const key = `${currentOrg}-${currentContainer}-${currentAccount}`;
+            const key = `${currentDiv}-${currentContainer}-${currentAccount.code}`;
             const records = financialRecords[key] || [];
             const container = document.getElementById('transactionsList');
             
@@ -990,18 +1109,21 @@
                 
                 const sign = record.type === 'credit' ? '+' : '-';
                 const amountClass = record.type === 'credit' ? 'amount-credit' : 'amount-debit';
+                const editable = canEdit(record);
+                const editStatus = editable ? '✏️ Editable' : '🔒 Locked';
                 
                 item.innerHTML = `
                     <div style="flex: 1;">
                         <div>
                             <span class="transaction-code">${record.code}</span>
                             <span class="transaction-date">${record.date}</span>
+                            <span class="transaction-code" style="background: ${editable ? '#4caf50' : '#9e9e9e'}; color: white; margin-left: 5px;">${editStatus}</span>
                         </div>
                         <div class="transaction-desc">${record.description}</div>
                     </div>
                     <div>
                         <div class="transaction-amount ${amountClass}">
-                            ${sign}$${record.amount.toFixed(2)}
+                            ${sign}${record.currency || currentUser.currency.symbol}${record.amount.toFixed(2)}
                         </div>
                     </div>
                 `;
@@ -1020,7 +1142,7 @@
                     banner.className = 'total-banner';
                     banner.innerHTML = `
                         <h4>Total for Entries ${batchStart + 1} - ${index + 1}</h4>
-                        <div class="total-amount">$${total.toFixed(2)}</div>
+                        <div class="total-amount">${currentUser.currency.symbol}${total.toFixed(2)}</div>
                     `;
                     container.appendChild(banner);
                 }
@@ -1041,7 +1163,7 @@
                 banner.style.opacity = '0.8';
                 banner.innerHTML = `
                     <h4>Running Total (${remaining} ${remaining === 1 ? 'entry' : 'entries'})</h4>
-                    <div class="total-amount">$${total.toFixed(2)}</div>
+                    <div class="total-amount">${currentUser.currency.symbol}${total.toFixed(2)}</div>
                     <p style="font-size: 12px; margin-top: 5px;">Will finalize at 7 entries</p>
                 `;
                 container.appendChild(banner);
