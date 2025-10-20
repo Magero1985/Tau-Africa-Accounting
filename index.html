@@ -1,9 +1,9 @@
-i<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oloo - Stay Connected</title>
+    <title>Tau Africa Accounting Friend</title>
     <style>
         * {
             margin: 0;
@@ -11,1288 +11,1045 @@ i<!DOCTYPE html>
             box-sizing: border-box;
         }
 
-        :root {
-            --sky-blue: #87CEEB;
-            --deep-sky: #00BFFF;
-            --light-sky: #E0F6FF;
-            --gold: #FFD700;
-            --dark-text: #2C3E50;
-            --white: #FFFFFF;
-            --shadow: rgba(0, 0, 0, 0.1);
-        }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--sky-blue) 0%, var(--deep-sky) 100%);
+            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 50%, #80deea 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 20px;
         }
 
         .container {
-            width: 100%;
-            max-width: 1400px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            height: 90vh;
-            max-height: 900px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        /* ========== AUTH SCREEN ========== */
-        .auth-screen {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        /* Auth Screen */
+        .auth-container {
+            max-width: 450px;
+            margin: 50px auto;
+            background: white;
             padding: 40px;
-            height: 100%;
-            background: linear-gradient(135deg, var(--light-sky) 0%, var(--sky-blue) 100%);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 188, 212, 0.3);
+            border: 3px solid #00bcd4;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
         }
 
         .logo {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, var(--deep-sky), var(--sky-blue));
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #00bcd4, #26a69a);
             border-radius: 50%;
             display: flex;
-            justify-content: center;
             align-items: center;
-            font-size: 64px;
-            font-weight: bold;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
             color: white;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            animation: pulse 2s infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        .auth-header h1 {
+            color: #00695c;
+            font-size: 28px;
+            margin-bottom: 5px;
         }
 
-        .app-name {
-            font-size: 48px;
-            font-weight: bold;
-            color: var(--deep-sky);
-            margin-bottom: 10px;
+        .auth-header p {
+            color: #00838f;
+            font-size: 14px;
         }
 
-        .tagline {
-            font-size: 18px;
-            color: var(--dark-text);
-            margin-bottom: 40px;
-            text-align: center;
-        }
-
-        .auth-form {
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .input-group {
+        .form-group {
             margin-bottom: 20px;
         }
 
-        .input-group label {
+        .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: var(--dark-text);
+            color: #00695c;
             font-weight: 600;
+            font-size: 14px;
         }
 
-        .input-group input {
+        .form-group input, .form-group select {
             width: 100%;
-            padding: 15px;
-            border: 2px solid var(--sky-blue);
+            padding: 12px 15px;
+            border: 2px solid #80deea;
             border-radius: 10px;
-            font-size: 16px;
+            font-size: 14px;
             transition: all 0.3s;
         }
 
-        .input-group input:focus {
+        .form-group input:focus, .form-group select:focus {
             outline: none;
-            border-color: var(--deep-sky);
-            box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.1);
+            border-color: #00bcd4;
+            box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.1);
         }
 
         .btn {
             width: 100%;
-            padding: 15px;
+            padding: 14px;
+            background: linear-gradient(135deg, #00bcd4, #26a69a);
+            color: white;
             border: none;
             border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--deep-sky), var(--sky-blue));
-            color: white;
-            margin-bottom: 10px;
-        }
-
-        .btn-primary:hover {
+        .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,191,255,0.4);
+            box-shadow: 0 8px 20px rgba(0, 188, 212, 0.4);
         }
 
         .btn-secondary {
-            background: transparent;
-            color: var(--deep-sky);
-            border: 2px solid var(--deep-sky);
+            background: linear-gradient(135deg, #26a69a, #00897b);
         }
 
-        .btn-secondary:hover {
-            background: var(--light-sky);
+        .btn-danger {
+            background: linear-gradient(135deg, #ef5350, #e53935);
         }
 
-        /* ========== MAIN APP LAYOUT ========== */
-        .app-container {
-            display: none;
-            height: 100%;
-            flex-direction: row;
-        }
-
-        .app-container.active {
-            display: flex;
-        }
-
-        /* ========== SIDEBAR ========== */
-        .sidebar {
-            width: 380px;
-            background: var(--light-sky);
-            border-right: 1px solid #ddd;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar-header {
-            padding: 20px;
-            background: linear-gradient(135deg, var(--deep-sky), var(--sky-blue));
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            font-size: 18px;
-            color: var(--deep-sky);
-        }
-
-        .user-name {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 15px;
-        }
-
-        .icon-btn {
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 20px;
+        .link-btn {
+            background: none;
+            color: #00bcd4;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
             cursor: pointer;
-            transition: transform 0.2s;
-            padding: 5px;
+            border: none;
         }
 
-        .icon-btn:hover {
-            transform: scale(1.2);
+        .link-btn:hover {
+            color: #00838f;
         }
 
-        .search-bar {
-            padding: 15px;
-            background: white;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .search-bar input {
-            width: 100%;
+        .alert {
             padding: 12px 15px;
-            border: 2px solid var(--sky-blue);
-            border-radius: 25px;
+            background: #e0f7fa;
+            border: 2px solid #00bcd4;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            color: #00695c;
             font-size: 14px;
         }
 
-        .search-bar input:focus {
-            outline: none;
-            border-color: var(--deep-sky);
+        /* Main App */
+        .hidden {
+            display: none !important;
         }
 
-        .contacts-list {
-            flex: 1;
-            overflow-y: auto;
+        .header {
             background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 188, 212, 0.2);
+            margin-bottom: 30px;
+            border-bottom: 4px solid #00bcd4;
         }
 
-        .contact-item {
-            padding: 15px 20px;
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-left {
             display: flex;
             align-items: center;
             gap: 15px;
-            cursor: pointer;
-            transition: background 0.2s;
-            border-bottom: 1px solid #f0f0f0;
         }
 
-        .contact-item:hover {
-            background: var(--light-sky);
-        }
-
-        .contact-item.active {
-            background: var(--light-sky);
-            border-left: 4px solid var(--deep-sky);
-        }
-
-        .contact-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--sky-blue);
+        .header-logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #00bcd4, #26a69a);
+            border-radius: 12px;
             display: flex;
-            justify-content: center;
             align-items: center;
-            font-weight: bold;
-            font-size: 20px;
+            justify-content: center;
+            font-size: 30px;
             color: white;
-            flex-shrink: 0;
         }
 
-        .contact-info {
-            flex: 1;
-            min-width: 0;
+        .header-title h1 {
+            font-size: 24px;
+            color: #00695c;
         }
 
-        .contact-name {
+        .header-title p {
+            font-size: 12px;
+            color: #00838f;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            text-align: right;
+            font-size: 14px;
+            color: #00695c;
+        }
+
+        .btn-small {
+            padding: 10px 20px;
+            font-size: 14px;
+            width: auto;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0, 188, 212, 0.1);
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .breadcrumb-item {
+            color: #00bcd4;
+            cursor: pointer;
             font-weight: 600;
-            color: var(--dark-text);
+        }
+
+        .breadcrumb-item:hover {
+            color: #00838f;
+        }
+
+        .breadcrumb-separator {
+            color: #80deea;
+        }
+
+        .breadcrumb-current {
+            color: #00695c;
+        }
+
+        /* Cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 188, 212, 0.15);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 188, 212, 0.3);
+            border-color: #00bcd4;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #00bcd4, #26a69a);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #00695c;
             margin-bottom: 5px;
         }
 
-        .contact-message {
-            font-size: 14px;
-            color: #666;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+        .card-subtitle {
+            font-size: 13px;
+            color: #00838f;
         }
 
-        .contact-meta {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 5px;
-        }
+        /* Account specific colors */
+        .account-ca { background: linear-gradient(135deg, #e0f7fa, #b2ebf2); border-color: #00bcd4; }
+        .account-ta { background: linear-gradient(135deg, #e0f2f1, #b2dfdb); border-color: #26a69a; }
+        .account-sa { background: linear-gradient(135deg, #e1f5fe, #b3e5fc); border-color: #039be5; }
+        .account-ba { background: linear-gradient(135deg, #e0f7fa, #80deea); border-color: #00acc1; }
+        .account-da { background: linear-gradient(135deg, #b2ebf2, #80deea); border-color: #00bcd4; }
+        .account-pa { background: linear-gradient(135deg, #b2dfdb, #80cbc4); border-color: #26a69a; }
 
-        .contact-time {
-            font-size: 12px;
-            color: #999;
-        }
-
-        .status-indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #4CAF50;
-        }
-
-        .status-indicator.offline {
-            background: #999;
-        }
-
-        /* ========== CHAT AREA ========== */
-        .chat-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+        /* Main Panel */
+        .main-panel {
             background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 188, 212, 0.15);
         }
 
-        .chat-header {
-            padding: 20px;
-            background: linear-gradient(135deg, var(--deep-sky), var(--sky-blue));
-            color: white;
+        .panel-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0f7fa;
         }
 
-        .chat-user-info {
-            display: flex;
-            align-items: center;
+        .panel-title h2 {
+            font-size: 24px;
+            color: #00695c;
+        }
+
+        .panel-title p {
+            font-size: 13px;
+            color: #00838f;
+        }
+
+        /* Entry Form */
+        .entry-form {
+            background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: 2px solid #00bcd4;
+        }
+
+        .entry-form h3 {
+            color: #00695c;
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
+            margin-bottom: 15px;
         }
 
-        .back-btn {
-            display: none;
+        /* Transaction History */
+        .transaction-item {
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 2px solid;
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            transition: all 0.3s;
+        }
+
+        .transaction-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 188, 212, 0.2);
+        }
+
+        .transaction-credit {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            border-color: #66bb6a;
+        }
+
+        .transaction-debit {
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            border-color: #ef5350;
+        }
+
+        .transaction-code {
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.1);
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-size: 11px;
+            font-family: monospace;
             margin-right: 10px;
         }
 
-        .chat-user-details h3 {
-            font-size: 18px;
-            margin-bottom: 3px;
-        }
-
-        .chat-user-status {
-            font-size: 13px;
-            opacity: 0.9;
-        }
-
-        .chat-actions {
-            display: flex;
-            gap: 20px;
-        }
-
-        .messages-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            background: #F5F5DC;
-            position: relative;
-        }
-
-        .hieroglyphic-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            opacity: 0.06;
-            font-size: 35px;
-            line-height: 55px;
-            overflow: hidden;
-            pointer-events: none;
-            z-index: 0;
-            word-wrap: break-word;
-            padding: 20px;
-        }
-
-        .ankh-symbol {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 250px;
-            opacity: 0.02;
-            color: var(--gold);
-            pointer-events: none;
-        }
-
-        .messages {
-            position: relative;
-            z-index: 1;
-        }
-
-        .message {
-            margin-bottom: 15px;
-            display: flex;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .message.sent {
-            justify-content: flex-end;
-        }
-
-        .message-bubble {
-            max-width: 65%;
-            padding: 10px 14px;
-            border-radius: 18px;
-            position: relative;
-            word-wrap: break-word;
-        }
-
-        .message.received .message-bubble {
-            background: white;
-            border-bottom-left-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .message.sent .message-bubble {
-            background: linear-gradient(135deg, var(--deep-sky), var(--sky-blue));
-            color: white;
-            border-bottom-right-radius: 4px;
-        }
-
-        .message-text {
-            margin-bottom: 4px;
-            font-size: 15px;
-        }
-
-        .message-time {
-            font-size: 11px;
-            opacity: 0.7;
-            text-align: right;
-        }
-
-        .message-input-container {
-            padding: 15px 20px;
-            background: #f9f9f9;
-            border-top: 1px solid #ddd;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .message-input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 2px solid var(--sky-blue);
-            border-radius: 25px;
-            font-size: 15px;
-            font-family: inherit;
-        }
-
-        .message-input:focus {
-            outline: none;
-            border-color: var(--deep-sky);
-        }
-
-        .send-btn {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--deep-sky), var(--sky-blue));
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: transform 0.2s;
-        }
-
-        .send-btn:hover {
-            transform: scale(1.1);
-        }
-
-        .send-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* ========== WELCOME SCREEN ========== */
-        .welcome-screen {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            background: linear-gradient(135deg, var(--light-sky) 0%, white 100%);
-        }
-
-        .welcome-logo {
-            width: 150px;
-            height: 150px;
-            background: linear-gradient(135deg, var(--deep-sky), var(--sky-blue));
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 80px;
-            color: white;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
-
-        .welcome-text {
-            text-align: center;
-            max-width: 500px;
-        }
-
-        .welcome-text h2 {
-            font-size: 32px;
-            color: var(--dark-text);
-            margin-bottom: 15px;
-        }
-
-        .welcome-text p {
-            font-size: 18px;
+        .transaction-date {
+            font-size: 12px;
             color: #666;
         }
 
-        .features {
-            margin-top: 40px;
-            display: flex;
-            gap: 40px;
+        .transaction-desc {
+            font-weight: 600;
+            color: #00695c;
+            margin-top: 5px;
         }
 
-        .feature {
+        .transaction-amount {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .amount-credit {
+            color: #2e7d32;
+        }
+
+        .amount-debit {
+            color: #c62828;
+        }
+
+        /* Total Banner */
+        .total-banner {
+            background: linear-gradient(135deg, #00bcd4, #26a69a);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
             text-align: center;
         }
 
-        .feature-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-
-        .feature-text {
+        .total-banner h4 {
             font-size: 14px;
-            color: var(--dark-text);
-            line-height: 1.5;
+            margin-bottom: 5px;
+            opacity: 0.9;
         }
 
-        /* ========== CALL MODAL ========== */
-        .call-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.95);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .call-modal.active {
-            display: flex;
-        }
-
-        .call-content {
-            text-align: center;
-            color: white;
-        }
-
-        .call-avatar {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: var(--sky-blue);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 60px;
-            margin: 0 auto 30px;
-            font-weight: bold;
-        }
-
-        .call-name {
+        .total-banner .total-amount {
             font-size: 32px;
-            margin-bottom: 10px;
+            font-weight: 700;
         }
 
-        .call-status {
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #80deea;
+        }
+
+        .empty-state-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        /* Quick Links */
+        .quick-links {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 188, 212, 0.15);
+            margin-top: 30px;
+        }
+
+        .quick-links h3 {
+            color: #00695c;
+            margin-bottom: 15px;
             font-size: 18px;
-            margin-bottom: 60px;
-            color: #ccc;
         }
 
-        .call-actions {
-            display: flex;
-            gap: 30px;
-            justify-content: center;
+        .quick-links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
         }
 
-        .call-btn {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            border: none;
-            font-size: 30px;
-            cursor: pointer;
-            transition: all 0.2s;
+        .quick-link {
+            display: block;
+            padding: 15px;
+            background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+            border: 2px solid #80deea;
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            color: #00695c;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
         }
 
-        .call-btn:hover {
-            transform: scale(1.1);
-        }
-
-        .call-btn:active {
-            transform: scale(0.95);
-        }
-
-        .call-btn.end {
-            background: #f44336;
+        .quick-link:hover {
+            background: linear-gradient(135deg, #00bcd4, #26a69a);
             color: white;
+            border-color: #00bcd4;
+            transform: translateY(-2px);
         }
 
-        .call-btn.mute {
-            background: #666;
-            color: white;
-        }
-
-        /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                position: absolute;
-                height: 100%;
-                z-index: 10;
-                display: none;
-            }
-
-            .sidebar.mobile-active {
-                display: flex;
-            }
-
-            .chat-area {
-                width: 100%;
-            }
-
-            .back-btn {
-                display: block !important;
-            }
-
-            .features {
+            .header-content {
                 flex-direction: column;
-                gap: 20px;
+                text-align: center;
             }
 
-            .app-name {
-                font-size: 36px;
+            .header-right {
+                flex-direction: column;
+                width: 100%;
             }
-        }
 
-        /* ========== SCROLLBAR ========== */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
+            .user-info {
+                text-align: center;
+            }
 
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
 
-        ::-webkit-scrollbar-thumb {
-            background: var(--sky-blue);
-            border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--deep-sky);
-        }
-
-        .hidden {
-            display: none !important;
+            .form-row {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- ========== AUTHENTICATION SCREEN ========== -->
-        <div class="auth-screen" id="authScreen">
-            <div class="logo">O</div>
-            <div class="app-name">Oloo</div>
-            <div class="tagline">Stay Connected - Even Without Data</div>
-            
-            <div class="auth-form">
-                <!-- Login Form -->
-                <div id="loginForm">
-                    <div class="input-group">
-                        <label>Phone Number</label>
-                        <input type="tel" id="loginPhone" placeholder="+254 700 000 000" value="+254700000000">
-                    </div>
-                    <div class="input-group">
-                        <label>Password</label>
-                        <input type="password" id="loginPassword" placeholder="Enter your password" value="demo123">
-                    </div>
-                    <button class="btn btn-primary" onclick="login()">Login</button>
-                    <button class="btn btn-secondary" onclick="showSignup()">Create Account</button>
-                </div>
+        <!-- Authentication Screen -->
+        <div id="authScreen" class="auth-container">
+            <div class="auth-header">
+                <div class="logo">💰</div>
+                <h1>Tau Africa</h1>
+                <p>Accounting Friend</p>
+            </div>
 
-                <!-- Signup Form -->
-                <div id="signupForm" class="hidden">
-                    <div class="input-group">
-                        <label>Full Name</label>
-                        <input type="text" id="signupName" placeholder="John Doe">
+            <div id="loginForm">
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label>📧 Email Address</label>
+                        <input type="email" id="loginEmail" required placeholder="your.email@example.com">
                     </div>
-                    <div class="input-group">
-                        <label>Phone Number</label>
-                        <input type="tel" id="signupPhone" placeholder="+254 700 000 000">
+                    <div class="form-group">
+                        <label>🔒 Password</label>
+                        <input type="password" id="loginPassword" required placeholder="Enter your password">
                     </div>
-                    <div class="input-group">
-                        <label>Password</label>
-                        <input type="password" id="signupPassword" placeholder="Create a password">
+                    <button type="submit" class="btn">Sign In</button>
+                    <button type="button" class="link-btn" onclick="showRegister()">Need an account? Register</button>
+                </form>
+            </div>
+
+            <div id="registerForm" class="hidden">
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label>👤 Full Name</label>
+                        <input type="text" id="regName" required placeholder="Enter your full name">
                     </div>
-                    <button class="btn btn-primary" onclick="signup()">Create Account</button>
-                    <button class="btn btn-secondary" onclick="showLogin()">Back to Login</button>
+                    <div class="form-group">
+                        <label>📧 Email Address</label>
+                        <input type="email" id="regEmail" required placeholder="your.email@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>🔒 Password</label>
+                        <input type="password" id="regPassword" required placeholder="Create a password">
+                    </div>
+                    <div class="form-group">
+                        <label>🔒 Confirm Password</label>
+                        <input type="password" id="regConfirm" required placeholder="Confirm your password">
+                    </div>
+                    <button type="submit" class="btn">Create Account</button>
+                    <button type="button" class="link-btn" onclick="showLogin()">Already have an account? Sign In</button>
+                </form>
+            </div>
+
+            <div id="verifyForm" class="hidden">
+                <div class="alert">
+                    📬 We've sent a verification code to <strong id="verifyEmail"></strong>
                 </div>
+                <form onsubmit="handleVerify(event)">
+                    <div class="form-group">
+                        <label>#️⃣ Verification Code</label>
+                        <input type="text" id="verifyCode" required placeholder="Enter 6-digit code">
+                    </div>
+                    <button type="submit" class="btn">Verify & Continue</button>
+                    <button type="button" class="link-btn" onclick="showRegister()">Back to registration</button>
+                </form>
             </div>
         </div>
 
-        <!-- ========== MAIN APP CONTAINER ========== -->
-        <div class="app-container" id="appContainer">
-            <!-- ========== SIDEBAR ========== -->
-            <div class="sidebar" id="sidebar">
-                <div class="sidebar-header">
-                    <div class="user-profile">
-                        <div class="avatar" id="userAvatar">U</div>
-                        <span class="user-name" id="userName">User</span>
+        <!-- Main Application -->
+        <div id="mainApp" class="hidden">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-content">
+                    <div class="header-left">
+                        <div class="header-logo">💰</div>
+                        <div class="header-title">
+                            <h1>Tau Africa</h1>
+                            <p>Accounting Friend</p>
+                        </div>
                     </div>
-                    <div class="header-actions">
-                        <button class="icon-btn" onclick="newChat()" title="New Chat">💬</button>
-                        <button class="icon-btn" onclick="showSettings()" title="Settings">⚙️</button>
-                        <button class="icon-btn" onclick="logout()" title="Logout">🚪</button>
+                    <div class="header-right">
+                        <div class="user-info">
+                            Welcome, <strong id="userName">User</strong>
+                        </div>
+                        <button onclick="logout()" class="btn btn-danger btn-small">🚪 Logout</button>
                     </div>
-                </div>
-
-                <div class="search-bar">
-                    <input type="text" id="searchInput" placeholder="Search contacts..." onkeyup="searchContacts(this.value)">
-                </div>
-
-                <div class="contacts-list" id="contactsList">
-                    <!-- Contacts will be populated here -->
                 </div>
             </div>
 
-            <!-- ========== CHAT AREA ========== -->
-            <div class="chat-area" id="chatArea">
-                <!-- Welcome Screen -->
-                <div class="welcome-screen" id="welcomeScreen">
-                    <div class="welcome-logo">O</div>
-                    <div class="welcome-text">
-                        <h2>Welcome to Oloo</h2>
-                        <p>Select a contact to start messaging</p>
-                    </div>
-                    <div class="features">
-                        <div class="feature">
-                            <div class="feature-icon">💬</div>
-                            <div class="feature-text">Light Messaging<br>Without Data</div>
-                        </div>
-                        <div class="feature">
-                            <div class="feature-icon">📞</div>
-                            <div class="feature-text">Crystal Clear<br>Voice Calls</div>
-                        </div>
-                        <div class="feature">
-                            <div class="feature-icon">📹</div>
-                            <div class="feature-text">HD Video<br>Calls</div>
-                        </div>
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <span class="breadcrumb-item" onclick="navigateToOrgs()">Organizations</span>
+                <span id="breadcrumbOrg" class="hidden">
+                    <span class="breadcrumb-separator">›</span>
+                    <span class="breadcrumb-item" onclick="navigateToContainers()"></span>
+                </span>
+                <span id="breadcrumbContainer" class="hidden">
+                    <span class="breadcrumb-separator">›</span>
+                    <span class="breadcrumb-item" onclick="navigateToAccounts()"></span>
+                </span>
+                <span id="breadcrumbAccount" class="hidden">
+                    <span class="breadcrumb-separator">›</span>
+                    <span class="breadcrumb-current"></span>
+                </span>
+            </div>
+
+            <!-- Organizations View -->
+            <div id="orgsView">
+                <h2 style="color: #00695c; margin-bottom: 20px;">Select Organization</h2>
+                <div class="cards-grid">
+                    <div class="card" onclick="selectOrg('TAU AFRICA INTL')">
+                        <div class="card-icon">🏢</div>
+                        <div class="card-title">TAU AFRICA INTL</div>
+                        <div class="card-subtitle">3 containers</div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Chat Container -->
-                <div id="chatContainer" class="hidden" style="display: flex; flex-direction: column; height: 100%;">
-                    <div class="chat-header">
-                        <div class="chat-user-info">
-                            <button class="icon-btn back-btn" id="backBtn" onclick="backToContacts()">◀</button>
-                            <div class="contact-avatar" id="chatAvatar">A</div>
-                            <div class="chat-user-details">
-                                <h3 id="chatName">Contact</h3>
-                                <div class="chat-user-status" id="chatStatus">Online</div>
+            <!-- Containers View -->
+            <div id="containersView" class="hidden">
+                <h2 style="color: #00695c; margin-bottom: 20px;">Select Container</h2>
+                <div class="cards-grid" id="containersGrid"></div>
+            </div>
+
+            <!-- Accounts View -->
+            <div id="accountsView" class="hidden">
+                <h2 style="color: #00695c; margin-bottom: 20px;">Select Account</h2>
+                <div class="cards-grid" id="accountsGrid"></div>
+            </div>
+
+            <!-- Account Details View -->
+            <div id="accountDetailsView" class="hidden">
+                <div class="main-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <h2 id="accountTitle"></h2>
+                            <p id="accountSubtitle"></p>
+                        </div>
+                        <button onclick="toggleEntryForm()" class="btn btn-secondary btn-small">➕ Add Entry</button>
+                    </div>
+
+                    <!-- Entry Form -->
+                    <div id="entryForm" class="entry-form hidden">
+                        <h3>New Financial Entry</h3>
+                        <form onsubmit="addEntry(event)">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>📅 Date</label>
+                                    <input type="date" id="entryDate" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>#️⃣ Transaction Code</label>
+                                    <input type="text" id="entryCode" required placeholder="TXN-12345">
+                                </div>
                             </div>
-                        </div>
-                        <div class="chat-actions">
-                            <button class="icon-btn" onclick="startCall('voice')" title="Voice Call">📞</button>
-                            <button class="icon-btn" onclick="startCall('video')" title="Video Call">📹</button>
-                            <button class="icon-btn" onclick="showChatMenu()" title="More">⋮</button>
-                        </div>
+                            <div class="form-row">
+                                <div class="form-group" style="grid-column: 1 / -1;">
+                                    <label>📝 Description</label>
+                                    <input type="text" id="entryDesc" required placeholder="Enter transaction description">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>💵 Amount</label>
+                                    <input type="number" step="0.01" id="entryAmount" required placeholder="0.00">
+                                </div>
+                                <div class="form-group">
+                                    <label>📊 Type</label>
+                                    <select id="entryType" required>
+                                        <option value="credit">Credit (+)</option>
+                                        <option value="debit">Debit (-)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button type="submit" class="btn" style="flex: 1;">Save Entry</button>
+                                <button type="button" onclick="toggleEntryForm()" class="btn" style="flex: 0 0 100px; background: #999;">Cancel</button>
+                            </div>
+                        </form>
                     </div>
 
-                    <div class="messages-container" id="messagesContainer">
-                        <div class="hieroglyphic-bg">
-𓀀 𓀁 𓀂 𓀃 𓀄 𓀅 𓀆 𓀇 𓀈 𓀉 𓀊 𓀋 𓀌 𓀍 𓀎 𓀏 𓀐 𓀑 𓀒 𓀓 𓀔 𓀕 𓀖 𓀗 𓀘 𓀙 𓀚 𓀛 𓀜 𓀝 𓀞 𓀟 𓀠 𓀡 𓀢 𓀣 𓀤 𓀥 𓀦 𓀧 𓀨 𓀩 𓁀 𓁁 𓁂 𓁃 𓁄 𓁅 𓁆 𓁇 𓁈 𓁉 𓁊 𓁋 𓁌 𓁍 𓁎 𓁏 𓁐 𓁑 𓁒 𓁓 𓁔 𓁕 𓁖 𓁗 𓁘 𓁙 𓁚 𓁛 𓁜 𓁝 𓁞 𓁟 𓁠 𓁡 𓁢 𓁣 𓁤 𓁥 𓁦 𓁧 𓁨 𓁩 𓂀 𓂁 𓂂 𓂃 𓂄 𓂅 𓂆 𓂇 𓂈 𓂉 𓂊 𓂋 𓂌 𓂍 𓂎 𓂏 𓂐 𓂑 𓂒 𓂓 𓂔 𓂕 𓂖 𓂗 𓂘 𓂙 𓂚 𓂛 𓂜 𓂝 𓂞 𓂟 𓂠 𓂡 𓂢 𓂣 𓂤 𓂥 𓂦 𓂧 𓂨 𓂩 𓃀 𓃁 𓃂 𓃃 𓃄 𓃅 𓃆 𓃇 𓃈 𓃉 𓃊 𓃋 𓃌 𓃍 𓃎 𓃏 𓃐 𓃑 𓃒 𓃓 𓃔 𓃕 𓃖 𓃗 𓃘 𓃙 𓃚 𓃛 𓃜 𓃝 𓃞 𓃟 𓃠 𓃡 𓃢 𓃣 𓃤 𓃥 𓃦 𓃧 𓃨 𓃩 𓄀 𓄁 𓄂 𓄃 𓄄 𓄅 𓄆 𓄇 𓄈 𓄉 𓄊 𓄋 𓄌 𓄍 𓄎 𓄏 𓄐 𓄑 𓄒 𓄓 𓄔 𓄕 𓄖 𓄗 𓄘 𓄙 𓄚 𓄛 𓄜 𓄝 𓄞 𓄟 𓄠 𓄡 𓄢 𓄣 𓄤 𓄥 𓄦 𓄧 𓄨 𓄩 𓅀 𓅁 𓅂 𓅃 𓅄 𓅅 𓅆 𓅇 𓅈 𓅉 𓅊 𓅋 𓅌 𓅍 𓅎 𓅏 𓅐 𓅑 𓅒 𓅓 𓅔 𓅕 𓅖 𓅗 𓅘 𓅙 𓅚 𓅛 𓅜 𓅝 𓅞 𓅟 𓅠 𓅡 𓅢 𓅣 𓅤 𓅥 𓅦 𓅧 𓅨 𓅩
-                        </div>
-                        <div class="ankh-symbol">☥</div>
-                        <div class="messages" id="messages">
-                            <!-- Messages will appear here -->
-                        </div>
-                    </div>
-
-                    <div class="message-input-container">
-                        <button class="icon-btn" style="color: var(--deep-sky);" title="Emoji">😊</button>
-                        <button class="icon-btn" style="color: var(--deep-sky);" title="Attach">📎</button>
-                        <input type="text" class="message-input" id="messageInput" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
-                        <button class="send-btn" onclick="sendMessage()" title="Send">➤</button>
+                    <!-- Transaction History -->
+                    <div>
+                        <h3 style="color: #00695c; margin-bottom: 15px;">Transaction History</h3>
+                        <div id="transactionsList"></div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- ========== CALL MODAL ========== -->
-    <div class="call-modal" id="callModal">
-        <div class="call-content">
-            <div class="call-avatar" id="callAvatar">A</div>
-            <div class="call-name" id="callContactName">Contact</div>
-            <div class="call-status" id="callStatus">Calling...</div>
-            <div class="call-actions">
-                <button class="call-btn mute" id="muteBtn" onclick="toggleMute()" title="Mute">🔇</button>
-                <button class="call-btn end" onclick="endCall()" title="End Call">📞</button>
+            <!-- Quick Links -->
+            <div class="quick-links">
+                <h3>🔗 Quick Links to Other Apps</h3>
+                <div class="quick-links-grid">
+                    <a href="https://magero1985.github.io/oloo_app/" target="_blank" class="quick-link">Oloo App</a>
+                    <a href="https://kabiru-mining-portal.vercel.app/" target="_blank" class="quick-link">Kabiru Mining</a>
+                    <a href="https://tau-africa.vercel.app/" target="_blank" class="quick-link">Tau Africa Portal</a>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // ========== GLOBAL STATE ==========
-        let currentUser = null;
-        let selectedContact = null;
-        let contacts = [
-            { id: 1, name: 'Sarah Johnson', phone: '+254701234567', lastMessage: 'Hey! How are you?', time: '10:30 AM', online: true },
-            { id: 2, name: 'David Kimani', phone: '+254702345678', lastMessage: 'See you tomorrow', time: '9:15 AM', online: true },
-            { id: 3, name: 'Mary Wanjiru', phone: '+254703456789', lastMessage: 'Thanks for the help!', time: 'Yesterday', online: false },
-            { id: 4, name: 'James Omondi', phone: '+254704567890', lastMessage: 'Meeting at 3 PM', time: 'Yesterday', online: true },
-            { id: 5, name: 'Grace Achieng', phone: '+254705678901', lastMessage: 'Happy birthday! 🎉', time: 'Monday', online: false },
-            { id: 6, name: 'Peter Mutua', phone: '+254706789012', lastMessage: 'Let me know when ready', time: 'Sunday', online: true },
-            { id: 7, name: 'Faith Njeri', phone: '+254707890123', lastMessage: 'Great idea! 👍', time: 'Saturday', online: false }
-        ];
-        let messages = {};
-        let isMuted = false;
-        let callInterval = null;
-
-        // ========== INITIALIZATION ==========
-        function init() {
-            generateSampleMessages();
-            console.log('Oloo App Initialized');
-        }
-
-        // ========== SAMPLE MESSAGES ==========
-        function generateSampleMessages() {
-            messages = {
-                1: [
-                    { text: 'Hey! How are you?', sent: false, time: '10:25 AM' },
-                    { text: 'I\'m good, thanks! How about you?', sent: true, time: '10:26 AM' },
-                    { text: 'Doing great! Want to meet up later?', sent: false, time: '10:30 AM' }
-                ],
-                2: [
-                    { text: 'Don\'t forget about the meeting tomorrow', sent: true, time: '9:10 AM' },
-                    { text: 'See you tomorrow', sent: false, time: '9:15 AM' }
-                ],
-                3: [
-                    { text: 'Can you help me with that project?', sent: false, time: '2:30 PM' },
-                    { text: 'Sure, I\'ll send you the files', sent: true, time: '2:35 PM' },
-                    { text: 'Thanks for the help!', sent: false, time: '3:00 PM' }
-                ],
-                4: [
-                    { text: 'Meeting at 3 PM', sent: false, time: '11:00 AM' },
-                    { text: 'Got it, I\'ll be there', sent: true, time: '11:05 AM' }
-                ],
-                5: [
-                    { text: 'Happy birthday! 🎉', sent: false, time: '8:00 AM' },
-                    { text: 'Thank you so much! 😊', sent: true, time: '8:30 AM' }
-                ],
-                6: [
-                    { text: 'Are you available today?', sent: false, time: '1:00 PM' },
-                    { text: 'Yes, let me know when ready', sent: true, time: '1:15 PM' }
-                ],
-                7: [
-                    { text: 'What do you think about this?', sent: true, time: '4:00 PM' },
-                    { text: 'Great idea! 👍', sent: false, time: '4:10 PM' }
-                ]
-            };
-        }
-
-        // ========== AUTHENTICATION ==========
-        function showSignup() {
-            document.getElementById('loginForm').classList.add('hidden');
-            document.getElementById('signupForm').classList.remove('hidden');
-        }
-
-        function showLogin() {
-            document.getElementById('signupForm').classList.add('hidden');
-            document.getElementById('loginForm').classList.remove('hidden');
-        }
-
-        function signup() {
-            const name = document.getElementById('signupName').value.trim();
-            const phone = document.getElementById('signupPhone').value.trim();
-            const password = document.getElementById('signupPassword').value.trim();
-
-            if (!name || !phone || !password) {
-                alert('Please fill in all fields');
-                return;
-            }
-
-            if (password.length < 6) {
-                alert('Password must be at least 6 characters');
-                return;
-            }
-
-            currentUser = { name, phone };
-            document.getElementById('userName').textContent = name;
-            document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
-            
-            showApp();
-        }
-
-        function login() {
-            const phone = document.getElementById('loginPhone').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
-
-            if (!phone || !password) {
-                alert('Please enter phone and password');
-                return;
-            }
-
-            currentUser = { name: 'Demo User', phone };
-            document.getElementById('userName').textContent = 'Demo User';
-            document.getElementById('userAvatar').textContent = 'D';
-            
-            showApp();
-        }
-
-        function showApp() {
-            document.getElementById('authScreen').style.display = 'none';
-            document.getElementById('appContainer').style.display = 'flex';
-            document.getElementById('appContainer').classList.add('active');
-            loadContacts();
-        }
-
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                currentUser = null;
-                selectedContact = null;
-                document.getElementById('authScreen').style.display = 'flex';
-                document.getElementById('appContainer').style.display = 'none';
-                document.getElementById('appContainer').classList.remove('active');
-                document.getElementById('welcomeScreen').style.display = 'flex';
-                document.getElementById('chatContainer').classList.add('hidden');
-                document.getElementById('loginPhone').value = '';
-                document.getElementById('loginPassword').value = '';
-                showLogin();
-            }
-        }
-
-        // ========== CONTACTS ==========
-        function loadContacts() {
-            const contactsList = document.getElementById('contactsList');
-            contactsList.innerHTML = '';
-
-            contacts.forEach(contact => {
-                const contactEl = document.createElement('div');
-                contactEl.className = 'contact-item';
-                contactEl.onclick = () => selectContact(contact.id);
-                
-                contactEl.innerHTML = `
-                    <div class="contact-avatar">${contact.name.charAt(0)}</div>
-                    <div class="contact-info">
-                        <div class="contact-name">${contact.name}</div>
-                        <div class="contact-message">${contact.lastMessage}</div>
-                    </div>
-                    <div class="contact-meta">
-                        <div class="contact-time">${contact.time}</div>
-                        ${contact.online ? '<div class="status-indicator"></div>' : '<div class="status-indicator offline"></div>'}
-                    </div>
-                `;
-                
-                contactsList.appendChild(contactEl);
-            });
-        }
-
-        function searchContacts(query) {
-            const contactItems = document.querySelectorAll('.contact-item');
-            const lowerQuery = query.toLowerCase();
-            
-            contactItems.forEach(item => {
-                const name = item.querySelector('.contact-name').textContent.toLowerCase();
-                if (name.includes(lowerQuery)) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        }
-
-        function selectContact(contactId) {
-            selectedContact = contacts.find(c => c.id === contactId);
-            if (!selectedContact) return;
-
-            // Update active contact
-            document.querySelectorAll('.contact-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            const contactItems = Array.from(document.querySelectorAll('.contact-item'));
-            const activeItem = contactItems.find(item => 
-                item.querySelector('.contact-name').textContent === selectedContact.name
-            );
-            if (activeItem) {
-                activeItem.classList.add('active');
-            }
-
-            // Show chat
-            document.getElementById('welcomeScreen').style.display = 'none';
-            document.getElementById('chatContainer').classList.remove('hidden');
-            document.getElementById('chatContainer').style.display = 'flex';
-            
-            // Update chat header
-            document.getElementById('chatName').textContent = selectedContact.name;
-            document.getElementById('chatAvatar').textContent = selectedContact.name.charAt(0);
-            document.getElementById('chatStatus').textContent = selectedContact.online ? 'Online' : 'Offline';
-            
-            // Load messages
-            loadMessages(contactId);
-
-            // Mobile responsive
-            if (window.innerWidth <= 768) {
-                document.getElementById('sidebar').classList.remove('mobile-active');
-            }
-        }
-
-        function backToContacts() {
-            if (window.innerWidth <= 768) {
-                document.getElementById('sidebar').classList.add('mobile-active');
-            }
-        }
-
-        // ========== MESSAGES ==========
-        function loadMessages(contactId) {
-            const messagesContainer = document.getElementById('messages');
-            messagesContainer.innerHTML = '';
-
-            const contactMessages = messages[contactId] || [];
-            
-            contactMessages.forEach(msg => {
-                addMessageToUI(msg.text, msg.sent, msg.time);
-            });
-
-            scrollToBottom();
-        }
-
-        function addMessageToUI(text, isSent, time) {
-            const messagesContainer = document.getElementById('messages');
-            const messageEl = document.createElement('div');
-            messageEl.className = `message ${isSent ? 'sent' : 'received'}`;
-            
-            if (!time) {
-                const now = new Date();
-                time = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
-            }
-            
-            messageEl.innerHTML = `
-                <div class="message-bubble">
-                    <div class="message-text">${escapeHtml(text)}</div>
-                    <div class="message-time">${time}</div>
-                </div>
-            `;
-            
-            messagesContainer.appendChild(messageEl);
-            scrollToBottom();
-        }
-
-        function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const text = input.value.trim();
-            
-            if (!text || !selectedContact) return;
-            
-            if (!messages[selectedContact.id]) {
-                messages[selectedContact.id] = [];
-            }
-            
-            const now = new Date();
-            const time = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
-            
-            messages[selectedContact.id].push({
-                text: text,
-                sent: true,
-                time: time
-            });
-            
-            addMessageToUI(text, true, time);
-            input.value = '';
-            
-            // Update contact last message
-            const contact = contacts.find(c => c.id === selectedContact.id);
-            if (contact) {
-                contact.lastMessage = text;
-                contact.time = time;
-                loadContacts();
-                // Reselect to maintain active state
-                const contactItems = Array.from(document.querySelectorAll('.contact-item'));
-                const activeItem = contactItems.find(item => 
-                    item.querySelector('.contact-name').textContent === selectedContact.name
-                );
-                if (activeItem) {
-                    activeItem.classList.add('active');
-                }
-            }
-            
-            // Simulate response
-            setTimeout(() => simulateResponse(), 1500 + Math.random() * 1500);
-        }
-
-        function simulateResponse() {
-            if (!selectedContact) return;
-            
-            const responses = [
-                'That sounds great!',
-                'Sure, I\'ll check that out',
-                'Thanks for letting me know',
-                'I agree with you',
-                'Let me get back to you on that',
-                'Absolutely! 👍',
-                'I\'ll think about it',
-                'Good idea!',
-                'Perfect timing!',
-                'Sounds good to me',
-                'I appreciate that',
-                'Will do!',
-                'Thanks! 😊',
-                'Got it!',
-                'Awesome!'
-            ];
-            
-            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-            const now = new Date();
-            const time = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
-            
-            messages[selectedContact.id].push({
-                text: randomResponse,
-                sent: false,
-                time: time
-            });
-            
-            addMessageToUI(randomResponse, false, time);
-            
-            // Update contact last message
-            const contact = contacts.find(c => c.id === selectedContact.id);
-            if (contact) {
-                contact.lastMessage = randomResponse;
-                contact.time = time;
-                loadContacts();
-                const contactItems = Array.from(document.querySelectorAll('.contact-item'));
-                const activeItem = contactItems.find(item => 
-                    item.querySelector('.contact-name').textContent === selectedContact.name
-                );
-                if (activeItem) {
-                    activeItem.classList.add('active');
-                }
-            }
-        }
-
-        function handleKeyPress(event) {
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
-                sendMessage();
-            }
-        }
-
-        function scrollToBottom() {
-            const container = document.getElementById('messagesContainer');
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // ========== CALLS ==========
-        function startCall(type) {
-            if (!selectedContact) return;
-            
-            const modal = document.getElementById('callModal');
-            const callAvatar = document.getElementById('callAvatar');
-            const callName = document.getElementById('callContactName');
-            const callStatus = document.getElementById('callStatus');
-            
-            callAvatar.textContent = selectedContact.name.charAt(0);
-            callName.textContent = selectedContact.name;
-            callStatus.textContent = type === 'video' ? 'Video calling...' : 'Calling...';
-            
-            modal.classList.add('active');
-            
-            // Simulate ringing
-            let ringCount = 0;
-            callInterval = setInterval(() => {
-                ringCount++;
-                if (ringCount > 3) {
-                    clearInterval(callInterval);
-                    callStatus.textContent = type === 'video' ? 'Video call connected' : 'Call connected';
-                }
-            }, 1000);
-        }
-
-        function endCall() {
-            const modal = document.getElementById('callModal');
-            modal.classList.remove('active');
-            isMuted = false;
-            document.getElementById('muteBtn').textContent = '🔇';
-            if (callInterval) {
-                clearInterval(callInterval);
-                callInterval = null;
-            }
-        }
-
-        function toggleMute() {
-            isMuted = !isMuted;
-            const muteBtn = document.getElementById('muteBtn');
-            muteBtn.textContent = isMuted ? '🔊' : '🔇';
-        }
-
-        // ========== UTILITY FUNCTIONS ==========
-        function newChat() {
-            alert('New Chat feature - Select a contact from the list to start chatting!');
-        }
-
-        function showSettings() {
-            alert('Settings:\n\n• Profile: ' + (currentUser ? currentUser.name : 'Not set') + '\n• Phone: ' + (currentUser ? currentUser.phone : 'Not set') + '\n• Theme: Sky Blue\n• Notifications: Enabled\n\nMore settings coming soon!');
-        }
-
-        function showChatMenu() {
-            alert('Chat Options:\n\n• View Contact Info\n• Mute Notifications\n• Clear Chat\n• Block Contact\n• Report\n\nMore options coming soon!');
-        }
-
-        // ========== INITIALIZATION ==========
-        window.onload = function() {
-            init();
-            
-            // Mobile sidebar handling
-            if (window.innerWidth <= 768) {
-                document.getElementById('sidebar').classList.add('mobile-active');
+        // Data structures
+        const organizations = {
+            'TAU AFRICA INTL': {
+                'FABRICAT': ['CA', 'TA', 'SA', 'BA', 'DA', 'PA'],
+                'TAUAFRICA': ['RAPIDAN', 'CLC'],
+                'VALEMA': ['SING', 'EQUINS', 'CORPORATE', 'BIVINGS1', 'BA', 'TA', 'FA', 'HA', 'CA']
             }
         };
 
-        // ========== RESPONSIVE ==========
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 768) {
-                document.getElementById('sidebar').classList.remove('mobile-active');
-                document.getElementById('sidebar').style.display = 'flex';
-            } else if (!selectedContact) {
-                document.getElementById('sidebar').classList.add('mobile-active');
-            }
-        });
+        const accountNames = {
+            'DSA': 'Sovereignty Account',
+            'CA': 'Community Account',
+            'TA': 'Title Account (Personal + Reference)',
+            'SA': 'Savings Account',
+            'EA': 'Everent Account',
+            'DA': 'Development Account',
+            'PA': 'Personal Account',
+            'BA': 'Business Account',
+            'FA': 'Foundation Account',
+            'HA': 'Holdings Account',
+            'CLC': 'CLC Account',
+            'RAPIDAN': 'Rapidan Account',
+            'SING': 'Sing Account',
+            'EQUINS': 'Equins Account',
+            'CORPORATE': 'Corporate Account',
+            'BIVINGS1': 'Bivings Account'
+        };
 
-        // Prevent form submission on enter
-        document.addEventListener('DOMContentLoaded', function() {
-            const inputs = document.querySelectorAll('input');
-            inputs.forEach(input => {
-                if (input.id !== 'messageInput') {
-                    input.addEventListener('keypress', function(e) {
-                        if (e.key === 'Enter') {
-                            e.preventDefault();
-                        }
-                    });
+        // State management
+        let currentUser = null;
+        let currentOrg = null;
+        let currentContainer = null;
+        let currentAccount = null;
+        let financialRecords = {};
+        let pendingUserData = null;
+
+        // Initialize
+        document.getElementById('entryDate').valueAsDate = new Date();
+
+        // Load data from storage
+        function loadData() {
+            const stored = localStorage.getItem('tauAfricaRecords');
+            if (stored) {
+                financialRecords = JSON.parse(stored);
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('tauAfricaRecords', JSON.stringify(financialRecords));
+        }
+
+        // Authentication
+        function showLogin() {
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('verifyForm').classList.add('hidden');
+        }
+
+        function showRegister() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.remove('hidden');
+            document.getElementById('verifyForm').classList.add('hidden');
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            currentUser = { email: email, name: email.split('@')[0] };
+            loadData();
+            showMainApp();
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const password = document.getElementById('regPassword').value;
+            const confirm = document.getElementById('regConfirm').value;
+            
+            if (password !== confirm) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+            pendingUserData = {
+                name: document.getElementById('regName').value,
+                email: document.getElementById('regEmail').value
+            };
+
+            document.getElementById('verifyEmail').textContent = pendingUserData.email;
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('verifyForm').classList.remove('hidden');
+        }
+
+        function handleVerify(e) {
+            e.preventDefault();
+            currentUser = pendingUserData;
+            loadData();
+            showMainApp();
+        }
+
+        function showMainApp() {
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            document.getElementById('userName').textContent = currentUser.name;
+            navigateToOrgs();
+        }
+
+        function logout() {
+            currentUser = null;
+            currentOrg = null;
+            currentContainer = null;
+            currentAccount = null;
+            document.getElementById('authScreen').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+            showLogin();
+        }
+
+        // Navigation
+        function navigateToOrgs() {
+            currentOrg = null;
+            currentContainer = null;
+            currentAccount = null;
+            
+            document.getElementById('orgsView').classList.remove('hidden');
+            document.getElementById('containersView').classList.add('hidden');
+            document.getElementById('accountsView').classList.add('hidden');
+            document.getElementById('accountDetailsView').classList.add('hidden');
+            
+            document.getElementById('breadcrumbOrg').classList.add('hidden');
+            document.getElementById('breadcrumbContainer').classList.add('hidden');
+            document.getElementById('breadcrumbAccount').classList.add('hidden');
+        }
+
+        function selectOrg(org) {
+            currentOrg = org;
+            navigateToContainers();
+        }
+
+        function navigateToContainers() {
+            currentContainer = null;
+            currentAccount = null;
+            
+            document.getElementById('orgsView').classList.add('hidden');
+            document.getElementById('containersView').classList.remove('hidden');
+            document.getElementById('accountsView').classList.add('hidden');
+            document.getElementById('accountDetailsView').classList.add('hidden');
+            
+            document.getElementById('breadcrumbOrg').classList.remove('hidden');
+            document.getElementById('breadcrumbOrg').querySelector('.breadcrumb-item').textContent = currentOrg;
+            document.getElementById('breadcrumbContainer').classList.add('hidden');
+            document.getElementById('breadcrumbAccount').classList.add('hidden');
+            
+            const grid = document.getElementById('containersGrid');
+            grid.innerHTML = '';
+            
+            Object.keys(organizations[currentOrg]).forEach(container => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.onclick = () => selectContainer(container);
+                card.innerHTML = `
+                    <div class="card-icon">📁</div>
+                    <div class="card-title">${container}</div>
+                    <div class="card-subtitle">${organizations[currentOrg][container].length} accounts</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function selectContainer(container) {
+            currentContainer = container;
+            navigateToAccounts();
+        }
+
+        function navigateToAccounts() {
+            currentAccount = null;
+            
+            document.getElementById('orgsView').classList.add('hidden');
+            document.getElementById('containersView').classList.add('hidden');
+            document.getElementById('accountsView').classList.remove('hidden');
+            document.getElementById('accountDetailsView').classList.add('hidden');
+            
+            document.getElementById('breadcrumbOrg').classList.remove('hidden');
+            document.getElementById('breadcrumbContainer').classList.remove('hidden');
+            document.getElementById('breadcrumbContainer').querySelector('.breadcrumb-item').textContent = currentContainer;
+            document.getElementById('breadcrumbAccount').classList.add('hidden');
+            
+            const grid = document.getElementById('accountsGrid');
+            grid.innerHTML = '';
+            
+            organizations[currentOrg][currentContainer].forEach(account => {
+                const card = document.createElement('div');
+                card.className = 'card account-' + account.toLowerCase();
+                card.onclick = () => selectAccount(account);
+                card.innerHTML = `
+                    <div class="card-icon">🧮</div>
+                    <div class="card-title">${account}</div>
+                    <div class="card-subtitle">${accountNames[account] || account}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function selectAccount(account) {
+            currentAccount = account;
+            showAccountDetails();
+        }
+
+        function showAccountDetails() {
+            document.getElementById('orgsView').classList.add('hidden');
+            document.getElementById('containersView').classList.add('hidden');
+            document.getElementById('accountsView').classList.add('hidden');
+            document.getElementById('accountDetailsView').classList.remove('hidden');
+            
+            document.getElementById('breadcrumbOrg').classList.remove('hidden');
+            document.getElementById('breadcrumbContainer').classList.remove('hidden');
+            document.getElementById('breadcrumbAccount').classList.remove('hidden');
+            document.getElementById('breadcrumbAccount').querySelector('.breadcrumb-current').textContent = currentAccount;
+            
+            document.getElementById('accountTitle').textContent = currentAccount;
+            document.getElementById('accountSubtitle').textContent = accountNames[currentAccount] || currentAccount;
+            
+            renderTransactions();
+        }
+
+        // Entry management
+        function toggleEntryForm() {
+            const form = document.getElementById('entryForm');
+            form.classList.toggle('hidden');
+        }
+
+        function addEntry(e) {
+            e.preventDefault();
+            
+            const key = `${currentOrg}-${currentContainer}-${currentAccount}`;
+            if (!financialRecords[key]) {
+                financialRecords[key] = [];
+            }
+            
+            const entry = {
+                id: Date.now(),
+                date: document.getElementById('entryDate').value,
+                code: document.getElementById('entryCode').value,
+                description: document.getElementById('entryDesc').value,
+                amount: parseFloat(document.getElementById('entryAmount').value),
+                type: document.getElementById('entryType').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            financialRecords[key].push(entry);
+            saveData();
+            
+            // Reset form
+            document.getElementById('entryDate').valueAsDate = new Date();
+            document.getElementById('entryCode').value = '';
+            document.getElementById('entryDesc').value = '';
+            document.getElementById('entryAmount').value = '';
+            document.getElementById('entryType').value = 'credit';
+            
+            toggleEntryForm();
+            renderTransactions();
+            alert('Entry added successfully!');
+        }
+
+        function renderTransactions() {
+            const key = `${currentOrg}-${currentContainer}-${currentAccount}`;
+            const records = financialRecords[key] || [];
+            const container = document.getElementById('transactionsList');
+            
+            if (records.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <p>No entries yet. Add your first transaction above.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            records.forEach((record, index) => {
+                const item = document.createElement('div');
+                item.className = `transaction-item transaction-${record.type}`;
+                
+                const sign = record.type === 'credit' ? '+' : '-';
+                const amountClass = record.type === 'credit' ? 'amount-credit' : 'amount-debit';
+                
+                item.innerHTML = `
+                    <div style="flex: 1;">
+                        <div>
+                            <span class="transaction-code">${record.code}</span>
+                            <span class="transaction-date">${record.date}</span>
+                        </div>
+                        <div class="transaction-desc">${record.description}</div>
+                    </div>
+                    <div>
+                        <div class="transaction-amount ${amountClass}">
+                            ${sign}$${record.amount.toFixed(2)}
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(item);
+                
+                // Add total banner every 7 entries
+                if ((index + 1) % 7 === 0) {
+                    const batchStart = Math.floor(index / 7) * 7;
+                    const batch = records.slice(batchStart, index + 1);
+                    const total = batch.reduce((sum, r) => {
+                        return r.type === 'credit' ? sum + r.amount : sum - r.amount;
+                    }, 0);
+                    
+                    const banner = document.createElement('div');
+                    banner.className = 'total-banner';
+                    banner.innerHTML = `
+                        <h4>Total for Entries ${batchStart + 1} - ${index + 1}</h4>
+                        <div class="total-amount">$${total.toFixed(2)}</div>
+                    `;
+                    container.appendChild(banner);
                 }
             });
-        });
+            
+            // If there are remaining entries (not reaching 7), show running total
+            const lastBatchStart = Math.floor((records.length - 1) / 7) * 7;
+            const remaining = records.length % 7;
+            
+            if (remaining > 0) {
+                const batch = records.slice(lastBatchStart);
+                const total = batch.reduce((sum, r) => {
+                    return r.type === 'credit' ? sum + r.amount : sum - r.amount;
+                }, 0);
+                
+                const banner = document.createElement('div');
+                banner.className = 'total-banner';
+                banner.style.opacity = '0.8';
+                banner.innerHTML = `
+                    <h4>Running Total (${remaining} ${remaining === 1 ? 'entry' : 'entries'})</h4>
+                    <div class="total-amount">$${total.toFixed(2)}</div>
+                    <p style="font-size: 12px; margin-top: 5px;">Will finalize at 7 entries</p>
+                `;
+                container.appendChild(banner);
+            }
+        }
+
+        // Initialize on load
+        loadData();
     </script>
 </body>
 </html>
