@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tau Africa Accounting Friend</title>
-      <!-- Firebase SDKs -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -748,20 +748,15 @@
     </div>
 
     <script>
-        // Firebase Configuration
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "your-project.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "your-app-id"
+        // Firebase Configuration Template (Add your credentials here)
+        const firebaseConfig = {
+  apiKey: "AIzaSyDHoP1-RY70eb0b0oGUlHeqXSmj256xNfk",
+  authDomain: "tau-africa-accounting-app.firebaseapp.com",
+  projectId: "tau-africa-accounting-app",
+  storageBucket: "tau-africa-accounting-app.firebasestorage.app",
+  messagingSenderId: "406935745499",
+  appId: "1:406935745499:web:161833431f946e93b42dfe"
 };
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
 
         // Firebase Security Rules Template:
         /*
@@ -837,253 +832,7 @@ const db = firebase.firestore();
         // Initialize
         document.getElementById('entryDate').valueAsDate = new Date();
 
-        // Load data from storage
-        function loadData() {
-            const stored = localStorage.getItem('tauAfricaRecords');
-            if (stored) {
-       // REGISTRATION WITH EMAIL VERIFICATION
-function handleRegister(e) {
-    e.preventDefault();
-    const password = document.getElementById('regPassword').value;
-    const confirm = document.getElementById('regConfirm').value;
-    
-    if (password !== confirm) {
-        alert('❌ Passwords do not match!');
-        return;
-    }
-
-    const email = document.getElementById('regEmail').value;
-    const name = document.getElementById('regName').value;
-
-    // Create user with Firebase
-    auth.createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            // Send verification email
-            return userCredential.user.sendEmailVerification();
-        })
-        .then(() => {
-            // Save user profile to Firestore
-            return db.collection('users').doc(auth.currentUser.uid).set({
-                name: name,
-                email: email,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-        })
-        .then(() => {
-            alert('✅ Registration successful! Please check your email to verify your account.');
-            showLogin();
-        })
-        .catch((error) => {
-            alert('❌ Registration error: ' + error.message);
-        });
-}
-
-// LOGIN WITH FIREBASE
-function handleLogin(e) {
-    e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-
-    auth.signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            if (!userCredential.user.emailVerified) {
-                alert('⚠️ Please verify your email before logging in. Check your inbox!');
-                auth.signOut();
-                return;
-            }
-            // Will be handled by onAuthStateChanged
-        })
-        .catch((error) => {
-            alert('❌ Login error: ' + error.message);
-        });
-}
-
-// MONITOR AUTHENTICATION STATE
-auth.onAuthStateChanged((user) => {
-    if (user && user.emailVerified) {
-        // User is signed in and verified
-        db.collection('users').doc(user.uid).get()
-            .then((doc) => {
-                currentUser = {
-                    uid: user.uid,
-                    email: user.email,
-                    name: doc.exists ? doc.data().name : user.email.split('@')[0]
-                };
-                loadData();
-                showMainApp();
-            });
-    } else if (user && !user.emailVerified) {
-        // User exists but email not verified
-        document.getElementById('authScreen').classList.remove('hidden');
-        document.getElementById('mainApp').classList.add('hidden');
-    } else {
-        // User is signed out
-        document.getElementById('authScreen').classList.remove('hidden');
-        document.getElementById('mainApp').classList.add('hidden');
-        showLogin();
-    }
-});
-
-// LOGOUT
-function logout() {
-    auth.signOut().then(() => {
-        currentUser = null;
-        currentOrg = null;
-        currentDivision = null;
-        currentContainer = null;
-        currentAccount = null;
-        alert('✅ Logged out successfully!');
-    });
-}         financialRecords = JSON.parse(stored);
-            }
-        }
-
-        function saveData() {
-            localStorage.setItem('tauAfricaRecords', JSON.stringify(financialRecords));
-        }
-
-        
-
-        // Navigation
-        function navigateToOrgs() {
-            currentDiv = null;
-            currentContainer = null;
-            currentAccount = null;
-            
-            document.getElementById('divsView').classList.remove('hidden');
-            document.getElementById('containersView').classList.add('hidden');
-            document.getElementById('accountsView').classList.add('hidden');
-            document.getElementById('accountDetailsView').classList.add('hidden');
-            
-            document.getElementById('breadcrumbDiv').classList.add('hidden');
-            document.getElementById('breadcrumbContainer').classList.add('hidden');
-            document.getElementById('breadcrumbAccount').classList.add('hidden');
-        }
-
-        function selectDiv(div) {
-            currentDiv = div;
-            navigateToContainers();
-        }
-
-        function navigateToContainers() {
-            currentContainer = null;
-            currentAccount = null;
-            
-            document.getElementById('divsView').classList.add('hidden');
-            document.getElementById('containersView').classList.remove('hidden');
-            document.getElementById('accountsView').classList.add('hidden');
-            document.getElementById('accountDetailsView').classList.add('hidden');
-            
-            document.getElementById('breadcrumbDiv').classList.remove('hidden');
-            document.getElementById('breadcrumbDiv').querySelector('.breadcrumb-item').textContent = currentDiv;
-            document.getElementById('breadcrumbContainer').classList.add('hidden');
-            document.getElementById('breadcrumbAccount').classList.add('hidden');
-            
-            const grid = document.getElementById('containersGrid');
-            grid.innerHTML = '';
-            
-            const containers = organization['TAU AFRICA'][currentDiv];
-            Object.keys(containers).forEach(container => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.onclick = () => selectContainer(container);
-                card.innerHTML = `
-                    <div class="card-icon">📁</div>
-                    <div class="card-title">${container}</div>
-                    <div class="card-subtitle">${containers[container].length} accounts</div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function selectContainer(container) {
-            currentContainer = container;
-            navigateToAccounts();
-        }
-
-        function navigateToAccounts() {
-            currentAccount = null;
-            
-            document.getElementById('divsView').classList.add('hidden');
-            document.getElementById('containersView').classList.add('hidden');
-            document.getElementById('accountsView').classList.remove('hidden');
-            document.getElementById('accountDetailsView').classList.add('hidden');
-            
-            document.getElementById('breadcrumbDiv').classList.remove('hidden');
-            document.getElementById('breadcrumbContainer').classList.remove('hidden');
-            document.getElementById('breadcrumbContainer').querySelector('.breadcrumb-item').textContent = currentContainer;
-            document.getElementById('breadcrumbAccount').classList.add('hidden');
-            
-            const grid = document.getElementById('accountsGrid');
-            grid.innerHTML = '';
-            
-            const accounts = organization['TAU AFRICA'][currentDiv][currentContainer];
-            accounts.forEach(account => {
-                const card = document.createElement('div');
-                card.className = 'card account-' + account.code.toLowerCase();
-                card.onclick = () => selectAccount(account);
-                card.innerHTML = `
-                    <div class="card-icon">🧮</div>
-                    <div class="card-title">${account.code}</div>
-                    <div class="card-subtitle">${account.name}</div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function selectAccount(account) {
-            currentAccount = account;
-            showAccountDetails();
-        }
-
-        function showAccountDetails() {
-            document.getElementById('divsView').classList.add('hidden');
-            document.getElementById('containersView').classList.add('hidden');
-            document.getElementById('accountsView').classList.add('hidden');
-            document.getElementById('accountDetailsView').classList.remove('hidden');
-            
-            document.getElementById('breadcrumbDiv').classList.remove('hidden');
-            document.getElementById('breadcrumbContainer').classList.remove('hidden');
-            document.getElementById('breadcrumbAccount').classList.remove('hidden');
-            document.getElementById('breadcrumbAccount').querySelector('.breadcrumb-current').textContent = currentAccount.code;
-            
-            document.getElementById('accountTitle').textContent = currentAccount.code;
-            document.getElementById('accountSubtitle').textContent = currentAccount.name;
-            
-            renderTransactions();
-        }
-
-        // Entry management
-        function toggleEntryForm() {
-            const form = document.getElementById('entryForm');
-            form.classList.toggle('hidden');
-        }
-
-        function addEntry(e) {
-            e.preventDefault();
-            
-            const key = `${currentDiv}-${currentContainer}-${currentAccount.code}`;
-            if (!financialRecords[key]) {
-                financialRecords[key] = [];
-            }
-            
-            const now = new Date();
-            const entry = {
-                id: Date.now(),
-                date: document.getElementById('entryDate').value,
-                code: document.getElementById('entryCode').value,
-                description: document.getElementById('entryDesc').value,
-                amount: parseFloat(document.getElementById('entryAmount').value),
-                type: document.getElementById('entryType').value,
-                timestamp: now.toISOString(),
-                currency: currentUser.currency.symbol,
-                editableUntil: new Date(now.getTime() + (4 * 60 * 60 * 1000)).toISOString() // 4 hours from now
-            };
-            
-            financialRecords[key].push(entry);
-            saveData();
-            
-            // LOAD DATA FROM FIRESTORE
+        // LOAD DATA FROM FIRESTORE
 function loadData() {
     if (!currentUser) return;
     
@@ -1231,6 +980,242 @@ function editEntry(entryId) {
         alert('❌ Error updating entry: ' + error.message);
     });
 }
+
+        // REGISTRATION WITH EMAIL VERIFICATION
+function handleRegister(e) {
+    e.preventDefault();
+    const password = document.getElementById('regPassword').value;
+    const confirm = document.getElementById('regConfirm').value;
+    
+    if (password !== confirm) {
+        alert('❌ Passwords do not match!');
+        return;
+    }
+
+    const email = document.getElementById('regEmail').value;
+    const name = document.getElementById('regName').value;
+
+    // Create user with Firebase
+    auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            // Send verification email
+            return userCredential.user.sendEmailVerification();
+        })
+        .then(() => {
+            // Save user profile to Firestore
+            return db.collection('users').doc(auth.currentUser.uid).set({
+                name: name,
+                email: email,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        })
+        .then(() => {
+            alert('✅ Registration successful! Please check your email to verify your account.');
+            showLogin();
+        })
+        .catch((error) => {
+            alert('❌ Registration error: ' + error.message);
+        });
+}
+
+// LOGIN WITH FIREBASE
+function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            if (!userCredential.user.emailVerified) {
+                alert('⚠️ Please verify your email before logging in. Check your inbox!');
+                auth.signOut();
+                return;
+            }
+            // Will be handled by onAuthStateChanged
+        })
+        .catch((error) => {
+            alert('❌ Login error: ' + error.message);
+        });
+}
+
+// MONITOR AUTHENTICATION STATE
+auth.onAuthStateChanged((user) => {
+    if (user && user.emailVerified) {
+        // User is signed in and verified
+        db.collection('users').doc(user.uid).get()
+            .then((doc) => {
+                currentUser = {
+                    uid: user.uid,
+                    email: user.email,
+                    name: doc.exists ? doc.data().name : user.email.split('@')[0]
+                };
+                loadData();
+                showMainApp();
+            });
+    } else if (user && !user.emailVerified) {
+        // User exists but email not verified
+        document.getElementById('authScreen').classList.remove('hidden');
+        document.getElementById('mainApp').classList.add('hidden');
+    } else {
+        // User is signed out
+        document.getElementById('authScreen').classList.remove('hidden');
+        document.getElementById('mainApp').classList.add('hidden');
+        showLogin();
+    }
+});
+
+// LOGOUT
+function logout() {
+    auth.signOut().then(() => {
+        currentUser = null;
+        currentOrg = null;
+        currentDivision = null;
+        currentContainer = null;
+        currentAccount = null;
+        alert('✅ Logged out successfully!');
+    });
+        }
+
+        // Navigation
+        function navigateToOrgs() {
+            currentDiv = null;
+            currentContainer = null;
+            currentAccount = null;
+            
+            document.getElementById('divsView').classList.remove('hidden');
+            document.getElementById('containersView').classList.add('hidden');
+            document.getElementById('accountsView').classList.add('hidden');
+            document.getElementById('accountDetailsView').classList.add('hidden');
+            
+            document.getElementById('breadcrumbDiv').classList.add('hidden');
+            document.getElementById('breadcrumbContainer').classList.add('hidden');
+            document.getElementById('breadcrumbAccount').classList.add('hidden');
+        }
+
+        function selectDiv(div) {
+            currentDiv = div;
+            navigateToContainers();
+        }
+
+        function navigateToContainers() {
+            currentContainer = null;
+            currentAccount = null;
+            
+            document.getElementById('divsView').classList.add('hidden');
+            document.getElementById('containersView').classList.remove('hidden');
+            document.getElementById('accountsView').classList.add('hidden');
+            document.getElementById('accountDetailsView').classList.add('hidden');
+            
+            document.getElementById('breadcrumbDiv').classList.remove('hidden');
+            document.getElementById('breadcrumbDiv').querySelector('.breadcrumb-item').textContent = currentDiv;
+            document.getElementById('breadcrumbContainer').classList.add('hidden');
+            document.getElementById('breadcrumbAccount').classList.add('hidden');
+            
+            const grid = document.getElementById('containersGrid');
+            grid.innerHTML = '';
+            
+            const containers = organization['TAU AFRICA'][currentDiv];
+            Object.keys(containers).forEach(container => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.onclick = () => selectContainer(container);
+                card.innerHTML = `
+                    <div class="card-icon">📁</div>
+                    <div class="card-title">${container}</div>
+                    <div class="card-subtitle">${containers[container].length} accounts</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function selectContainer(container) {
+            currentContainer = container;
+            navigateToAccounts();
+        }
+
+        function navigateToAccounts() {
+            currentAccount = null;
+            
+            document.getElementById('divsView').classList.add('hidden');
+            document.getElementById('containersView').classList.add('hidden');
+            document.getElementById('accountsView').classList.remove('hidden');
+            document.getElementById('accountDetailsView').classList.add('hidden');
+            
+            document.getElementById('breadcrumbDiv').classList.remove('hidden');
+            document.getElementById('breadcrumbContainer').classList.remove('hidden');
+            document.getElementById('breadcrumbContainer').querySelector('.breadcrumb-item').textContent = currentContainer;
+            document.getElementById('breadcrumbAccount').classList.add('hidden');
+            
+            const grid = document.getElementById('accountsGrid');
+            grid.innerHTML = '';
+            
+            const accounts = organization['TAU AFRICA'][currentDiv][currentContainer];
+            accounts.forEach(account => {
+                const card = document.createElement('div');
+                card.className = 'card account-' + account.code.toLowerCase();
+                card.onclick = () => selectAccount(account);
+                card.innerHTML = `
+                    <div class="card-icon">🧮</div>
+                    <div class="card-title">${account.code}</div>
+                    <div class="card-subtitle">${account.name}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function selectAccount(account) {
+            currentAccount = account;
+            showAccountDetails();
+        }
+
+        function showAccountDetails() {
+            document.getElementById('divsView').classList.add('hidden');
+            document.getElementById('containersView').classList.add('hidden');
+            document.getElementById('accountsView').classList.add('hidden');
+            document.getElementById('accountDetailsView').classList.remove('hidden');
+            
+            document.getElementById('breadcrumbDiv').classList.remove('hidden');
+            document.getElementById('breadcrumbContainer').classList.remove('hidden');
+            document.getElementById('breadcrumbAccount').classList.remove('hidden');
+            document.getElementById('breadcrumbAccount').querySelector('.breadcrumb-current').textContent = currentAccount.code;
+            
+            document.getElementById('accountTitle').textContent = currentAccount.code;
+            document.getElementById('accountSubtitle').textContent = currentAccount.name;
+            
+            renderTransactions();
+        }
+
+        // Entry management
+        function toggleEntryForm() {
+            const form = document.getElementById('entryForm');
+            form.classList.toggle('hidden');
+        }
+
+        function addEntry(e) {
+            e.preventDefault();
+            
+            const key = `${currentDiv}-${currentContainer}-${currentAccount.code}`;
+            if (!financialRecords[key]) {
+                financialRecords[key] = [];
+            }
+            
+            const now = new Date();
+            const entry = {
+                id: Date.now(),
+                date: document.getElementById('entryDate').value,
+                code: document.getElementById('entryCode').value,
+                description: document.getElementById('entryDesc').value,
+                amount: parseFloat(document.getElementById('entryAmount').value),
+                type: document.getElementById('entryType').value,
+                timestamp: now.toISOString(),
+                currency: currentUser.currency.symbol,
+                editableUntil: new Date(now.getTime() + (4 * 60 * 60 * 1000)).toISOString() // 4 hours from now
+            };
+            
+            financialRecords[key].push(entry);
+            saveData();
+            
+            // In production, this will be saved to Firebase Firestore
             // with security rules enforcing the 4-hour edit window
             
             // Reset form
