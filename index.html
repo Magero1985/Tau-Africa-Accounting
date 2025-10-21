@@ -1305,14 +1305,16 @@
     </div>
 
     <!-- File input for documents -->
-    <input type="file" id="documentInput" class="file-input" accept=".pdf,.
-<!-- Firebase SDK -->
+<input type="file" id="documentInput" class="file-input" accept=".pdf,.doc,.docx,.txt,.xls,.xlsx,.ppt,.pptx" onchange="handleDocumentUpload(event)">
+
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
     <script>
+        // Initialize Firebase first
         const firebaseConfig = {
             apiKey: "AIzaSyAYFky7QV9dpoGG-uY_2aYNyarXJd4oUiE",
             authDomain: "tau-connect-app.firebaseapp.com",
@@ -1322,7 +1324,12 @@
             appId: "1:276047207095:web:1c9fafe933bcf5ba1d8b32"
         };
 
-        firebase.initializeApp(firebaseConfig);
+        // Initialize Firebase app
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        
+        // Initialize Firebase services
         const auth = firebase.auth();
         const db = firebase.firestore();
         const storage = firebase.storage();
