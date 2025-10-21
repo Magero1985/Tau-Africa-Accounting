@@ -9,6 +9,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -139,6 +141,27 @@
 
         .link-btn:hover {
             color: #00838f;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #00838f;
+            padding: 0;
+        }
+
+        .password-toggle:hover {
+            color: #00bcd4;
         }
 
         .alert {
@@ -683,10 +706,28 @@
                     </div>
                     <div class="form-group">
                         <label>🔒 Password</label>
-                        <input type="password" id="loginPassword" required placeholder="Enter your password">
+                        <div class="password-container">
+                            <input type="password" id="loginPassword" required placeholder="Enter your password">
+                            <button type="button" class="password-toggle" onclick="togglePassword('loginPassword')">👁️</button>
+                        </div>
                     </div>
                     <button type="submit" class="btn">Sign In</button>
+                    <button type="button" class="link-btn" onclick="showForgotPassword()">Forgot Password?</button>
                     <button type="button" class="link-btn" onclick="showRegister()">Need an account? Register</button>
+                </form>
+            </div>
+
+            <div id="forgotPasswordForm" class="hidden">
+                <form onsubmit="handleForgotPassword(event)">
+                    <div class="alert">
+                        🔑 Enter your email address and we'll send you a link to reset your password.
+                    </div>
+                    <div class="form-group">
+                        <label>📧 Email Address</label>
+                        <input type="email" id="resetEmail" required placeholder="your.email@example.com">
+                    </div>
+                    <button type="submit" class="btn">Send Reset Link</button>
+                    <button type="button" class="link-btn" onclick="showLogin()">Back to Login</button>
                 </form>
             </div>
 
@@ -716,11 +757,17 @@
                     </div>
                     <div class="form-group">
                         <label>🔒 Password</label>
-                        <input type="password" id="regPassword" required placeholder="Create a password (min 6 characters)">
+                        <div class="password-container">
+                            <input type="password" id="regPassword" required placeholder="Create a password (min 6 characters)">
+                            <button type="button" class="password-toggle" onclick="togglePassword('regPassword')">👁️</button>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>🔒 Confirm Password</label>
-                        <input type="password" id="regConfirm" required placeholder="Confirm your password">
+                        <div class="password-container">
+                            <input type="password" id="regConfirm" required placeholder="Confirm your password">
+                            <button type="button" class="password-toggle" onclick="togglePassword('regConfirm')">👁️</button>
+                        </div>
                     </div>
                     <button type="submit" class="btn">Create Account</button>
                     <button type="button" class="link-btn" onclick="showLogin()">Already have an account? Sign In</button>
@@ -984,6 +1031,79 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        // EmailJS Configuration
+        // Sign up at https://www.emailjs.com/
+        // Create an account, then:
+        // 1. Go to Email Services and connect your email (Gmail, Outlook, etc.)
+        // 2. Go to Email Templates and create templates for:
+        //    - Monthly Statement (template_statement)
+        //    - Deadline Reminder (template_reminder)
+        // 3. Get your Public Key from Account -> API Keys
+        const EMAILJS_PUBLIC_KEY = "YOUR_EMAILJS_PUBLIC_KEY"; // Replace with your key
+        const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID"; // e.g., "service_abc123"
+        const EMAILJS_STATEMENT_TEMPLATE = "template_statement"; // Your template ID
+        const EMAILJS_REMINDER_TEMPLATE = "template_reminder"; // Your template ID
+
+        // Initialize EmailJS
+        if (EMAILJS_PUBLIC_KEY !== "YOUR_EMAILJS_PUBLIC_KEY") {
+            emailjs.init(EMAILJS_PUBLIC_KEY);
+        }
+
+        /*
+        EMAILJS SETUP GUIDE:
+        
+        1. Create Account at https://www.emailjs.com/ (Free tier: 200 emails/month)
+        
+        2. Add Email Service:
+           - Go to "Email Services"
+           - Click "Add New Service"
+           - Choose Gmail/Outlook/SendGrid
+           - Connect your email
+           - Note the Service ID (e.g., service_abc123)
+        
+        3. Create Email Templates:
+        
+           Template 1: Monthly Statement (template_statement)
+           Subject: Monthly Financial Statement - {{month}}
+           Body:
+           Hello Finance Department,
+           
+           User: {{user_name}} ({{user_email}})
+           Account: {{account_name}}
+           Period: {{month}}
+           Total Entries: {{record_count}}
+           
+           Statement Details:
+           {{statement_html}}
+           
+           Best regards,
+           Tau Africa Accounting System
+           
+           Template 2: Deadline Reminder (template_reminder)
+           Subject: Monthly Statement Reminder - {{days_left}} days left
+           Body:
+           Hello {{user_name}},
+           
+           This is a reminder to submit your monthly financial statement.
+           Days remaining: {{days_left}}
+           Deadline: {{deadline_date}}
+           
+           Please log in and submit your statement to avoid account suspension.
+           
+           Best regards,
+           Tau Africa Team
+        
+        4. Get Public Key:
+           - Go to "Account" -> "General"
+           - Copy your Public Key
+           - Paste it in EMAILJS_PUBLIC_KEY above
+        
+        5. Update the variables above with your:
+           - EMAILJS_PUBLIC_KEY
+           - EMAILJS_SERVICE_ID
+           - Template IDs
+        */
+
         // Currency mapping
         const currencyMap = {
             'KE': { symbol: 'KSh', name: 'Kenyan Shilling' },
@@ -1138,25 +1258,35 @@
             }
         }
 
-        // Request notification permission
+        // Request notification permission (without showing browser URL)
         function requestNotificationPermission() {
             if ('Notification' in window && Notification.permission === 'default') {
                 Notification.requestPermission().then(permission => {
                     if (permission === 'granted') {
                         console.log('Notification permission granted');
+                        // Show a test notification
+                        showNotification('Tau Africa Accounting', 'Notifications enabled! You\'ll receive daily reminders.');
                     }
                 });
             }
         }
 
-        // Send push notification
-        function sendPushNotification(title, body) {
+        // Send notification without URL (standalone notification)
+        function showNotification(title, body) {
             if ('Notification' in window && Notification.permission === 'granted') {
-                new Notification(title, {
+                // Create notification with no URL/tag to avoid browser prefix
+                const notification = new Notification(title, {
                     body: body,
-                    icon: '💰',
-                    badge: '💰'
+                    icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="75" font-size="75">💰</text></svg>',
+                    badge: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="75" font-size="75">💰</text></svg>',
+                    silent: false,
+                    requireInteraction: false
                 });
+
+                // Auto-close after 5 seconds
+                setTimeout(() => {
+                    notification.close();
+                }, 5000);
             }
         }
 
@@ -1173,7 +1303,7 @@
             const timeUntilReminder = reminderTime - now;
 
             setTimeout(() => {
-                sendPushNotification(
+                showNotification(
                     '📊 Tau Africa Reminder',
                     'Don\'t forget to update your financial records today!'
                 );
@@ -1183,15 +1313,52 @@
             }, timeUntilReminder);
         }
 
+        // Toggle password visibility
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const button = field.nextElementSibling;
+            
+            if (field.type === 'password') {
+                field.type = 'text';
+                button.textContent = '🙈';
+            } else {
+                field.type = 'password';
+                button.textContent = '👁️';
+            }
+        }
+
         // Authentication helper functions
         function showLogin() {
             document.getElementById('loginForm').classList.remove('hidden');
             document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('forgotPasswordForm').classList.add('hidden');
         }
 
         function showRegister() {
             document.getElementById('loginForm').classList.add('hidden');
             document.getElementById('registerForm').classList.remove('hidden');
+            document.getElementById('forgotPasswordForm').classList.add('hidden');
+        }
+
+        function showForgotPassword() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('forgotPasswordForm').classList.remove('hidden');
+        }
+
+        // Handle password reset
+        function handleForgotPassword(e) {
+            e.preventDefault();
+            const email = document.getElementById('resetEmail').value;
+
+            auth.sendPasswordResetEmail(email)
+                .then(() => {
+                    alert('✅ Password reset email sent! Please check your inbox.');
+                    showLogin();
+                })
+                .catch((error) => {
+                    alert('❌ Error: ' + error.message);
+                });
         }
 
         function showMainApp() {
@@ -1892,69 +2059,25 @@
                 return;
             }
             
-            // Generate statement
-            let statementHTML = `
-                <h2>Monthly Financial Statement</h2>
-                <p><strong>Period:</strong> ${month}</p>
-                <p><strong>Account:</strong> ${currentAccount.code} - ${currentAccount.name}</p>
-                <p><strong>Division:</strong> ${currentDiv}</p>
-                <p><strong>Container:</strong> ${currentContainer}</p>
-                <p><strong>User:</strong> ${currentUser.name} (${currentUser.email})</p>
-                <hr>
-                <table border="1" cellpadding="10" style="border-collapse: collapse; width: 100%;">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Code/Category</th>
-                            <th>Description</th>
-                            ${isIncomeExpenseLog ? '<th>Income</th><th>Expense</th><th>Total</th>' : '<th>Type</th><th>Amount</th>'}
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
+            // Generate statement HTML
+            let statementHTML = `<table border="1" cellpadding="10" style="border-collapse: collapse; width: 100%;"><thead><tr><th>Date</th><th>Code/Category</th><th>Description</th>${isIncomeExpenseLog ? '<th>Income</th><th>Expense</th><th>Total</th>' : '<th>Type</th><th>Amount</th>'}</tr></thead><tbody>`;
             
             let grandTotal = 0;
             
             monthRecords.forEach(record => {
                 if (isIncomeExpenseLog) {
-                    statementHTML += `
-                        <tr>
-                            <td>${record.date}</td>
-                            <td>${record.category}</td>
-                            <td>${record.description}</td>
-                            <td>${record.currency}${record.income.toFixed(2)}</td>
-                            <td>${record.currency}${record.expense.toFixed(2)}</td>
-                            <td>${record.currency}${record.total.toFixed(2)}</td>
-                        </tr>
-                    `;
+                    statementHTML += `<tr><td>${record.date}</td><td>${record.category}</td><td>${record.description}</td><td>${record.currency}${record.income.toFixed(2)}</td><td>${record.currency}${record.expense.toFixed(2)}</td><td>${record.currency}${record.total.toFixed(2)}</td></tr>`;
                     grandTotal += record.total;
                 } else {
                     const amount = record.type === 'credit' ? record.amount : -record.amount;
                     grandTotal += amount;
-                    statementHTML += `
-                        <tr>
-                            <td>${record.date}</td>
-                            <td>${record.code}</td>
-                            <td>${record.description}</td>
-                            <td>${record.type.toUpperCase()}</td>
-                            <td>${record.currency}${record.amount.toFixed(2)}</td>
-                        </tr>
-                    `;
+                    statementHTML += `<tr><td>${record.date}</td><td>${record.code}</td><td>${record.description}</td><td>${record.type.toUpperCase()}</td><td>${record.currency}${record.amount.toFixed(2)}</td></tr>`;
                 }
             });
             
-            statementHTML += `
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="${isIncomeExpenseLog ? 5 : 4}" style="text-align: right;"><strong>Grand Total:</strong></td>
-                            <td><strong>${currentUser.currency.symbol}${grandTotal.toFixed(2)}</strong></td>
-                        </tr>
-                    </tfoot>
-                </table>
-            `;
+            statementHTML += `</tbody><tfoot><tr><td colspan="${isIncomeExpenseLog ? 5 : 4}" style="text-align: right;"><strong>Grand Total:</strong></td><td><strong>${currentUser.currency.symbol}${grandTotal.toFixed(2)}</strong></td></tr></tfoot></table>`;
             
-            // Save submission record
+            // Save submission record first
             db.collection('submissions').doc(currentUser.uid).set({
                 lastSubmission: month,
                 submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -1962,15 +2085,41 @@
                 recordCount: monthRecords.length
             }, { merge: true })
             .then(() => {
-                // In production, this would send an actual email via Firebase Functions
-                // For now, we'll simulate it
-                console.log('Statement HTML:', statementHTML);
-                alert(`✅ Monthly statement for ${month} has been prepared!\n\nIn production, this would be emailed to: ${orgEmail}\n\nYour submission has been recorded.`);
+                // Send email via EmailJS
+                if (EMAILJS_PUBLIC_KEY !== "YOUR_EMAILJS_PUBLIC_KEY") {
+                    const templateParams = {
+                        to_email: orgEmail,
+                        user_name: currentUser.name,
+                        user_email: currentUser.email,
+                        account_name: `${currentAccount.code} - ${currentAccount.name}`,
+                        division: currentDiv,
+                        container: currentContainer,
+                        month: month,
+                        record_count: monthRecords.length,
+                        grand_total: `${currentUser.currency.symbol}${grandTotal.toFixed(2)}`,
+                        statement_html: statementHTML
+                    };
+
+                    return emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_STATEMENT_TEMPLATE, templateParams)
+                        .then(() => {
+                            alert(`✅ Monthly statement for ${month} sent to ${orgEmail}!\n\nYour submission has been recorded.`);
+                        })
+                        .catch((error) => {
+                            console.error('EmailJS Error:', error);
+                            alert(`⚠️ Statement prepared but email failed to send. Please configure EmailJS.\n\nYour submission has been recorded in the database.`);
+                        });
+                } else {
+                    // EmailJS not configured
+                    console.log('Statement HTML:', statementHTML);
+                    alert(`✅ Monthly statement for ${month} has been prepared and recorded!\n\n⚠️ EmailJS not configured. To enable real-time email:\n1. Sign up at emailjs.com\n2. Configure the settings at the top of the script\n\nFor now, your submission is saved in the database.`);
+                }
+            })
+            .then(() => {
                 closeEmailModal();
                 checkMonthlyDeadline();
             })
             .catch((error) => {
-                alert('❌ Error recording submission: ' + error.message);
+                alert('❌ Error: ' + error.message);
             });
         }
 
